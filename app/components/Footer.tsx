@@ -4,7 +4,7 @@ import Image from "next/image"
 
 export default function Footer() {
   return (
-    <footer className="bg-pink-200">
+    <footer className="shadow-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
@@ -14,7 +14,7 @@ export default function Footer() {
                 <Image alt="SarusKitchen Logo" src={'/images/bakery-illustration.png'} width={200} height={200}/>
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-pink-400">Saru's Kitchen</span>
+                <span className="text-2xl font-bold text-pink-400">{process.env.NEXT_PUBLIC_APP_NAME}</span>
                 <span className="text-xs">By Sarika Shirbhate</span>
               </div>
             </a>
@@ -77,8 +77,11 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="">© 2024 Saru's Kitchen. All rights reserved.</p>
-          <p>Made with 💙 by Anshul Shirbhate</p>
+          <p className="">© 2024 {process.env.NEXT_PUBLIC_APP_NAME}. All rights reserved.</p>
+          <p>Made with 💙 by <a href="https://www.linkedin.com/in/anshulshirbhate/" className="hover:text-blue-500 transition"> 
+          <span className="inline-block hover:scale-105 transition-transform">
+            Anshul Shirbhate
+          </span></a></p>
         </div>
       </div>
     </footer>

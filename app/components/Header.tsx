@@ -29,7 +29,7 @@ export default function Header() {
               <Image alt="SarusKitchen Logo" src={'/images/bakery-illustration.png'} width={200} height={200}/>
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-pink-600">Saru's Kitchen</span>
+              <span className="text-2xl font-bold text-pink-600">{process.env.NEXT_PUBLIC_APP_NAME}</span>
               <span className="text-gray-500 text-xs">by Sarika Shirbhate</span>
             </div>
           </Link>

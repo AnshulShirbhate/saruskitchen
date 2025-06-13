@@ -5,11 +5,12 @@ import "./globals.css"
 import { CartProvider } from "./context/CartContext"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
+import TopLoader from "./components/TopLoader"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Creamy Creations - Premium Homemade Cakes",
+  title: process.env.NEXT_PUBLIC_APP_NAME+" - Premium Homemade Cakes",
   description:
     "Discover our hygienic, quality homemade cakes with customizable options. Fresh, healthy, and delicious cakes made with love.",
     generator: 'v0.dev',
@@ -28,7 +29,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <CartProvider>
           <Header />
-          <main className="min-h-screen">{children}</main>
+          <main className="min-h-screen">
+            <TopLoader />
+            {children}
+            </main>
           <Footer />
         </CartProvider>
       </body>
