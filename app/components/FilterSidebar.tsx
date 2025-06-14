@@ -17,7 +17,7 @@ export interface FilterState {
   priceRange: [number, number]
 }
 
-const categories = ["Cakes", "Pastries", "Desserts", "Cupcakes"]
+const categories = ["cakes", "pastries", "desserts", "cupcakes"]
 const flavors = ["Chocolate", "Vanilla", "Strawberry", "Red Velvet", "Black Forest", "Butterscotch"]
 const dietaryTypes = ["Veg", "Non-Veg"]
 

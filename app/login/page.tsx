@@ -41,11 +41,9 @@ const LoginPage = () => {
           draggable: true,
           progress: undefined,
           theme: "light",
-          transition: Bounce,
-          onClose: () => {
-            router.push("/admin/addproduct");
-          },
+          transition: Bounce,  
         });
+        router.push("/admin/addproduct");
       } else {
         const err = await res.text();
         toast.error(err || "❌ Login failed");
@@ -64,19 +62,6 @@ const LoginPage = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <ToastContainer
-        position="bottom-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
         <h2 className="text-3xl font-bold text-pink-600 text-center mb-8">
           🔐 Admin Login

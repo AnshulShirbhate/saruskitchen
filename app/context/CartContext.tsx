@@ -2,14 +2,11 @@
 
 import type React from "react"
 import { createContext, useContext, useReducer, type ReactNode } from "react"
+import ProductInterface from '../components/ProductInterface';
 
-export interface CartItem {
-  id: string
-  name: string
-  price: number
-  image: string
+
+export interface CartItem extends ProductInterface {
   quantity: number
-  category: string
 }
 
 interface CartState {
@@ -31,7 +28,8 @@ const CartContext = createContext<{
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
-      const existingItem = state.items.find((item) => item.id === action.payload.id)
+      // const existingItem = state.items.find((item) => item.id === action.payload.id && item.price === action.payload.price)
+      const existingItem = state.items.find((item) => item.id === action.payload.id && item.price === action.payload.price)
       if (existingItem) {
         const updatedItems = state.items.map((item) =>
           item.id === action.payload.id ? { ...item, quantity: item.quantity + 1 } : item,

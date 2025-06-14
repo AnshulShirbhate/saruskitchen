@@ -128,10 +128,8 @@ const AddProductForm = () => {
           progress: undefined,
           theme: "light",
           transition: Bounce,
-          onClose: () => {
-            router.push('/login');
-          }
         });
+        router.push('/login');
     } finally {
       setLoading(false);
     }
@@ -153,19 +151,6 @@ const AddProductForm = () => {
       transition={{ duration: 0.6 }}
       className="max-w-2xl my-20 mx-auto p-8 bg-gradient-to-br from-pink-50 to-white shadow-xl rounded-xl"
     >
-      <ToastContainer
-        position="bottom-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
       <h2 className="text-3xl font-bold text-center text-pink-600 mb-8">
         🍰 Add New Product
       </h2>
