@@ -11,6 +11,7 @@ const AddProductForm = () => {
     name: "",
     flavor: "",
     category: "",
+    isveg: "",
     description: "",
     image: null as File | null,
     weights: {
@@ -89,6 +90,7 @@ const AddProductForm = () => {
           name: "",
           flavor: "",
           category: "",
+          isveg: "",
           description: "",
           image: null,
           weights: {
@@ -139,6 +141,7 @@ const AddProductForm = () => {
   formData.name.trim() !== "" &&
   formData.flavor.trim() !== "" &&
   formData.category.trim() !== "" &&
+  formData.isveg.trim() !== "" &&
   formData.description.trim() !== "" &&
   formData.image !== null &&
   Object.values(formData.weights).every((price) => price.trim() !== "");
@@ -189,6 +192,20 @@ const AddProductForm = () => {
           <option value="cupcakes">Cupcakes</option>
           <option value="desserts">Desserts</option>
         </select>
+
+        <select
+          name="isveg"
+          value={formData.isveg}
+          onChange={handleChange}
+          required
+          className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
+        >
+          <option value="">Select Type</option>
+          <option value="true">Vegeterian</option>
+          <option value="false">Non-Vegeterian</option>
+        </select>
+
+        
 
         <input
           type="file"

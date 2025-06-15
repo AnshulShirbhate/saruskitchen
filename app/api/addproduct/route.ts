@@ -1,24 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
 import pool from "@/lib/db";
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
 
-  const cookieStore = cookies();
-  const token = (await cookieStore).get("auth_token")?.value;
 
   try {
 
-    if (!token) throw new Error("No token");
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
     const formData = await req.formData();
 
     const name = formData.get("name") as string;
     const flavor = formData.get("flavor") as string;
     const category = formData.get("category") as string;
+    const isveg = formData.get("isveg") as string;
+    const isVeg = isveg === "true";
     const description = formData.get("description") as string;
     const weights = JSON.parse(formData.get("weights") as string);
     const image = formData.get("image") as File;
@@ -48,8 +44,8 @@ export async function POST(req: NextRequest) {
     });
 
     await pool.query(
-      `INSERT INTO products (name, flavor, category, image_url, image_id, weights, description)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      `INSERT INTO products (name, flavor, category, image_url, image_id, weights, description, isveg)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [
         name,
         flavor,
@@ -58,14 +54,12 @@ export async function POST(req: NextRequest) {
         uploadResult.public_id,
         weights,
         description,
+        isVeg
       ]
     );
 
     return NextResponse.json({ message: "Product added successfully." }, { status: 200 });
   } catch (err) {
-    console.log(err)
-    const response = NextResponse.json({message: "Unauthorized"}, {status: 401});
-    response.cookies.delete('auth_token');
-    return response;
+    return NextResponse.json({message: "Server Error"}, {status: 500});
   }
 }
