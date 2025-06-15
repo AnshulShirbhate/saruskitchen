@@ -5,35 +5,17 @@ import Image from "next/image"
 import Carousel from "./components/Carousel"
 import FeaturesSection from "./components/FeaturesSection"
 import ProductCard from "./components/ProductCard"
-// import { products } from "./data/products"
 import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
-import ProductInterface from "./components/ProductInterface"
+import {useDispatch, useSelector} from 'react-redux';
+import { RootState } from "@/redux/store"
 
 export default function Home() {
-    const [products, setProducts] = useState<ProductInterface[] | null>(null)
-    const [loading, setLoading] = useState(true)
-  
-    useEffect(() => {
-      fetchProducts()
-    }, [])
-  
-    async function fetchProducts() {
-      try {
-        setLoading(true)
-        const response = await fetch("/api/getallproducts")
-        const data = await response.json()
-        if (response.ok) {
-          setProducts(data.products)
-        } else {
-          console.error("Error fetching products:", data.message)
-        }
-      } catch (error) {
-        console.error("Network error while fetching products:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
+    const products = useSelector((state: RootState)=>{
+      return state.products.products;
+    })
+    const loading = useSelector((state: RootState) =>{
+      return state.products.loading;
+    })
   const topProducts = products && products.slice(0, 9)
 
   return (
