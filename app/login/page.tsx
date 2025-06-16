@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import { motion } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { setAdmin } from "@/redux/adminSlice";
 
 const LoginPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   const [credentials, setCredentials] = useState({
@@ -44,6 +48,7 @@ const LoginPage = () => {
           transition: Bounce,  
         });
         router.push("/admin/addproduct");
+        dispatch(setAdmin(true));
       } else {
         const err = await res.text();
         toast.error(err || "❌ Login failed");

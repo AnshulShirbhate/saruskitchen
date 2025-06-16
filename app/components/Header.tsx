@@ -1,22 +1,71 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useState } from "react"
-import { ShoppingCart, Menu, X } from "lucide-react"
-import { useCart } from "../context/CartContext"
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
+import Link from "next/link";
+import { useState } from "react";
+import { ShoppingCart, Menu, X } from "lucide-react";
+import { useCart } from "../context/CartContext";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/redux/store";
+import { AppDispatch } from "@/redux/store";
+import { setAdmin } from "@/redux/adminSlice";
+import { Bounce, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { state } = useCart()
+  const dispatch = useDispatch<AppDispatch>();
+  const isAdmin = useSelector((state: RootState) => state.admin.isAdmin);
+  const router = useRouter();
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { state } = useCart();
 
   const navigation = [
     { name: "Home", href: "/" },
     { name: "Products", href: "/products" },
     { name: "Custom Cakes", href: "/custom-cakes" },
     { name: "About", href: "/about" },
-  ]
+  ];
+
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/logout");
+      const data = await res.json();
+
+      if (res.ok) {
+        dispatch(setAdmin(false));
+        toast.success("Successfully Logged Out!", {
+          position: "bottom-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        router.push("/login");
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    } finally {
+      setIsMenuOpen(false);
+    }
+  };
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -24,12 +73,19 @@ export default function Header() {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-16 h-16 flex items-center justify-center">
+            <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center">
               {/* <span className="text-white font-bold text-lg">CC</span> */}
-              <Image alt="SarusKitchen Logo" src={'/images/bakery-illustration.png'} width={200} height={200}/>
+              <Image
+                alt="SarusKitchen Logo"
+                src={"/images/bakery-illustration.png"}
+                width={200}
+                height={200}
+              />
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-pink-600">{process.env.NEXT_PUBLIC_APP_NAME}</span>
+              <span className="text-xl md:text-2xl font-bold text-pink-600">
+                {process.env.NEXT_PUBLIC_APP_NAME}
+              </span>
               <span className="text-gray-500 text-xs">by Sarika Shirbhate</span>
             </div>
           </Link>
@@ -40,11 +96,37 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors"
+                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
+                  item.name === "Custom Cakes"
+                    ? "bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600 text-white shadow-lg  hover:scale-105"
+                    : "text-gray-700 hover:text-pink-600"
+                }`}
               >
-                {item.name}
+                {item.name === "Custom Cakes" ? "🎂 Custom Cakes" : item.name}
+                {item.name === "Custom Cakes" && (
+                  <span className="absolute -top-2 -right-4 bg-yellow-300 text-yellow-900 text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce shadow">
+                    NEW
+                  </span>
+                )}
               </Link>
             ))}
+
+            {isAdmin && (
+              <Link
+                href={"/admin/addproduct"}
+                className="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors"
+              >
+                Add Product
+              </Link>
+            )}
+            {isAdmin && (
+              <button
+                onClick={handleLogout}
+                className="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors"
+              >
+                Logout
+              </button>
+            )}
           </nav>
 
           {/* Cart and Mobile Menu */}
@@ -59,8 +141,17 @@ export default function Header() {
             </Link>
 
             {/* Mobile menu button */}
-            <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="md:hidden"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </Button>
           </div>
         </div>
@@ -73,16 +164,48 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-gray-700 hover:text-pink-600 block px-3 py-2 text-base font-medium"
+                  className={`relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 ${
+                    item.name === "Custom Cakes"
+                      ? "bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600 text-white shadow-lg hover:scale-105"
+                      : "text-gray-700 hover:text-pink-600"
+                  }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {item.name}
+                  {item.name === "Custom Cakes" ? "🎂 Custom Cakes" : item.name}
+                  {item.name === "Custom Cakes" && (
+                    <span className="absolute -top-2 -right-4 bg-yellow-300 text-yellow-900 text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce shadow">
+                      NEW
+                    </span>
+                  )}
                 </Link>
               ))}
+
+              {isAdmin && (
+                <Link
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                  }}
+                  href={"/admin/addproduct"}
+                  className="text-gray-700 hover:text-pink-600 block px-3 py-2 text-base font-medium"
+                >
+                  Add Product
+                </Link>
+              )}
+              {isAdmin && (
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="text-gray-700 hover:text-pink-600 block px-3 py-2 text-base font-medium"
+                >
+                  Logout
+                </button>
+              )}
             </div>
           </div>
         )}
       </div>
     </header>
-  )
+  );
 }

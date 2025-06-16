@@ -7,7 +7,9 @@ import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 
 export default function ProductsPage() {
-
+  const isAdmin = useSelector((state: RootState) => {
+    return state.admin.isAdmin;
+  });
   const [filters, setFilters] = useState<FilterState>({
     categories: [],
     flavors: [],
@@ -15,13 +17,14 @@ export default function ProductsPage() {
     priceRange: [0, 5000],
   });
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const products = useSelector((state: RootState) => {
     return state.products.products;
   });
   const loading = useSelector((state: RootState) => {
     return state.products.loading;
   });
-
 
   const filteredProducts = useMemo(() => {
     if (!products) return [];
@@ -75,8 +78,17 @@ export default function ProductsPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Our Products</h1>
 
         <div className="flex flex-col lg:flex-row gap-8">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-3 bg-blue-600 w-5/12 text-white md:hidden rounded-xl"
+          >
+            {sidebarOpen ? "Close Filters" : "Apply Filters"}
+          </button>
+
           {/* Sidebar */}
-          <div className="lg:w-1/4">
+          <div
+            className={`lg:w-1/4 ${sidebarOpen ? "block" : "hidden"} md:block`}
+          >
             <FilterSidebar onFilterChange={setFilters} />
           </div>
 

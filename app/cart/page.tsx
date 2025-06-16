@@ -79,10 +79,10 @@ export default function CartPage() {
                 <div className="space-y-4">
                   {state.items.map((item) => (
                     <div
-                      key={item.id}
+                      key={item.id+Math.random()*new Date().getUTCMilliseconds()}
                       className="flex items-center space-x-4 p-4 border rounded-lg"
                     >
-                      <div className="w-20 h-20 relative">
+                      <div className="w-20 h-20 relative ">
                         <Image
                           src={item.image_url || "/placeholder.svg"}
                           alt={item.name}
@@ -96,12 +96,13 @@ export default function CartPage() {
                           {item.name}
                         </h3>
                         <p className="text-sm text-gray-600">{item.category}</p>
+                        <p className="text-sm text-gray-600">{item.weight}</p>
                         <p className="text-lg font-bold text-pink-600">
                           ₹{item.price}
                         </p>
                       </div>
 
-                      <div className="flex items-center space-x-2">
+                      <div className="flex flex-col space-y-1 md:space-y-0 md:flex-row items-center space-x-2 ">
                         <Button
                           variant="outline"
                           size="icon"
@@ -110,7 +111,7 @@ export default function CartPage() {
                           }
                           disabled={item.quantity <= 1}
                         >
-                          <Minus className="h-4 w-4" />
+                          <Minus className="h-2 w-2 md:h-4 md:w-4" />
                         </Button>
                         <Input
                           type="number"
@@ -121,7 +122,7 @@ export default function CartPage() {
                               Number.parseInt(e.target.value) || 1
                             )
                           }
-                          className="w-16 text-center"
+                          className="w-10 md:w-16 text-center"
                           min="1"
                         />
                         <Button
@@ -131,7 +132,7 @@ export default function CartPage() {
                             updateQuantity(item.id, item.quantity + 1)
                           }
                         >
-                          <Plus className="h-4 w-4" />
+                          <Plus className="h-2 w-2 md:h-4 md:w-4" />
                         </Button>
                       </div>
 

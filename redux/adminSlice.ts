@@ -1,4 +1,15 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import { Bounce, toast } from 'react-toastify';
+
+export const checkIsAdmin = createAsyncThunk('admin/checkIsAdmin', async ()=>{
+    try {
+          const response = await fetch("/api/checkisadmin");
+          const data = await response.json();
+          return data.isAdmin;
+        } catch (error) {
+           console.log("Some issue in the server!")
+        }
+})
 
 interface adminInitialStateInterface {
     isAdmin: boolean;
@@ -15,6 +26,11 @@ const adminSlice = createSlice({
         setAdmin: (state, action) => {
             state.isAdmin = action.payload;
         }
+    },
+    extraReducers: (builder) =>{
+        builder.addCase(checkIsAdmin.fulfilled, (state, action)=>{
+            state.isAdmin = action.payload;
+        })
     }
 })
 

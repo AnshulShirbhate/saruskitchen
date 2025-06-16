@@ -6,7 +6,8 @@ import ProductInterface from '../components/ProductInterface';
 
 
 export interface CartItem extends ProductInterface {
-  quantity: number
+  quantity: number,
+  weight: string
 }
 
 interface CartState {
@@ -28,8 +29,8 @@ const CartContext = createContext<{
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
-      // const existingItem = state.items.find((item) => item.id === action.payload.id && item.price === action.payload.price)
       const existingItem = state.items.find((item) => item.id === action.payload.id && item.price === action.payload.price)
+      // const existingItem = state.items.find((item) => item.id === action.payload.id)
       if (existingItem) {
         const updatedItems = state.items.map((item) =>
           item.id === action.payload.id ? { ...item, quantity: item.quantity + 1 } : item,
