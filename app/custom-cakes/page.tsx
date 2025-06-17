@@ -193,9 +193,9 @@ export default function CustomCakesPage() {
                     3
                   </div>
                   <div>
-                    <h4 className="font-medium">Creation & Delivery</h4>
+                    <h4 className="font-medium">Creation & Order Takeaway</h4>
                     <p className="text-sm text-gray-600">
-                      We'll create your dream cake and deliver it fresh to your doorstep.
+                      Your dream cake, freshly crafted with care — ready for you to take away with a smile and pure satisfaction.
                     </p>
                   </div>
                 </div>
@@ -208,11 +208,9 @@ export default function CustomCakesPage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li>• Custom cakes start from ₹1,500</li>
                   <li>• Pricing depends on size, complexity, and ingredients</li>
                   <li>• 50% advance payment required</li>
                   <li>• Minimum 48 hours notice required</li>
-                  <li>• Free delivery within 10km radius</li>
                 </ul>
               </CardContent>
             </Card>

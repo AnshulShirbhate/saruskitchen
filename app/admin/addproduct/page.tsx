@@ -226,7 +226,7 @@ const AddProductForm = () => {
           <h3 className="text-lg font-semibold text-gray-700 mb-2">
             💰 Price by Weight
           </h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {Object.entries(formData.weights).map(([weight, value]) => (
               <div key={weight} className="flex items-center gap-2">
                 <label className="w-16">{weight}</label>

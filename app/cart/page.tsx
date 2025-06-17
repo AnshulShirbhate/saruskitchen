@@ -13,6 +13,8 @@ import { Bounce, toast } from "react-toastify";
 export default function CartPage() {
   const { state, dispatch } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [discountPercent, setDiscountPercent] = useState(0);
 
   const updateQuantity = (id: string, quantity: number) => {
     dispatch({ type: "UPDATE_QUANTITY", payload: { id, quantity } });
@@ -22,13 +24,36 @@ export default function CartPage() {
     dispatch({ type: "REMOVE_ITEM", payload: id });
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     setIsCheckingOut(true);
     // Simulate checkout process
-    setTimeout(() => {
-      dispatch({ type: "CLEAR_CART" });
-      setIsCheckingOut(false);
-      toast.success("Order Placed Successfully!", {
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(state.items),
+      });
+      const data = await response.json();
+      if(response.ok){
+        toast.success(data.message, {
+          position: "bottom-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        dispatch({ type: "CLEAR_CART" });
+      }else {
+        throw new Error(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message, {
         position: "bottom-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -39,8 +64,28 @@ export default function CartPage() {
         theme: "light",
         transition: Bounce,
       });
-    }, 2000);
+    }finally{
+      setIsCheckingOut(false);
+    }
+    
   };
+
+  const handleApplyCoupon = () => {
+    const code = couponCode.trim().toUpperCase();
+    if (code === "SAVE10") {
+      setDiscountPercent(10);
+      toast.success("10% discount applied!", { position: "bottom-center" });
+    } else if (code === "SAVE5") {
+      setDiscountPercent(5);
+      toast.success("5% discount applied!", { position: "bottom-center" });
+    } else {
+      setDiscountPercent(0);
+      toast.error("Invalid coupon code", { position: "bottom-center" });
+    }
+  };
+
+  const discountAmount = Math.round((state.total * discountPercent) / 100);
+  const finalTotal = state.total - discountAmount;
 
   if (state.items.length === 0) {
     return (
@@ -79,7 +124,10 @@ export default function CartPage() {
                 <div className="space-y-4">
                   {state.items.map((item) => (
                     <div
-                      key={item.id+Math.random()*new Date().getUTCMilliseconds()}
+                      key={
+                        item.id +
+                        Math.random() * new Date().getUTCMilliseconds()
+                      }
                       className="flex items-center space-x-4 p-4 border rounded-lg"
                     >
                       <div className="w-20 h-20 relative ">
@@ -163,24 +211,60 @@ export default function CartPage() {
                 <CardTitle>Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                {/* Coupon Input */}
+                <div className="flex items-center space-x-2">
+                  <Input
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    placeholder="Enter Coupon Code"
+                    className="flex-1"
+                    disabled={discountPercent > 0}
+                  />
+                  {discountPercent > 0 ? (
+                    <Button
+                      variant="destructive"
+                      onClick={() => {
+                        setCouponCode("");
+                        setDiscountPercent(0);
+                        toast.info("Coupon removed", {
+                          position: "bottom-center",
+                        });
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleApplyCoupon}
+                      className="bg-pink-500 hover:bg-pink-600"
+                    >
+                      Apply
+                    </Button>
+                  )}
+                </div>
+
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
                   <span>₹{state.total}</span>
                 </div>
-                <div className="flex justify-between">
+                {discountPercent > 0 && (
+                  <div className="flex justify-between text-green-600 font-semibold">
+                    <span>Discount ({discountPercent}%):</span>
+                    <span>- ₹{discountAmount}</span>
+                  </div>
+                )}
+                {/* <div className="flex justify-between">
                   <span>Delivery:</span>
                   <span>₹50</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Tax (5%):</span>
                   <span>₹{Math.round(state.total * 0.05)}</span>
-                </div>
+                </div> */}
                 <hr />
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total:</span>
-                  <span>
-                    ₹{state.total + 50 + Math.round(state.total * 0.05)}
-                  </span>
+                  <span>₹{finalTotal}</span>
                 </div>
 
                 <Button
@@ -192,8 +276,8 @@ export default function CartPage() {
                 </Button>
 
                 <div className="text-sm text-gray-600 space-y-1">
-                  <p>• Free delivery on orders above ₹1000</p>
-                  <p>• Fresh cakes delivered within 2-4 hours</p>
+                  <p>• Free candles on orders above ₹1000</p>
+                  <p>• Promise of freshness and the highest hygiene</p>
                   <p>• 100% satisfaction guaranteed</p>
                 </div>
               </CardContent>

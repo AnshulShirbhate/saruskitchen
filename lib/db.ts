@@ -23,6 +23,7 @@ pool.query(`
         image_id TEXT,
         weights JSONB NOT NULL,
         description TEXT NOT NULL,
+        isveg BOOLEAN NOT NULL
         created_at TIMESTAMP DEFAULT NOW()
     );
 `);
