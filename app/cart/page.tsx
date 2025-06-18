@@ -9,12 +9,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { Bounce, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
+  const router = useRouter();
   const { state, dispatch } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
+
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
 
   const updateQuantity = (id: string, quantity: number) => {
     dispatch({ type: "UPDATE_QUANTITY", payload: { id, quantity } });
@@ -26,17 +31,16 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
-    // Simulate checkout process
     try {
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(state.items),
+        body: JSON.stringify({cartInfo: state.items, customerInfo:{customerName, customerPhone}}),
       });
       const data = await response.json();
-      if(response.ok){
+      if (response.ok) {
         toast.success(data.message, {
           position: "bottom-center",
           autoClose: 2000,
@@ -49,7 +53,8 @@ export default function CartPage() {
           transition: Bounce,
         });
         dispatch({ type: "CLEAR_CART" });
-      }else {
+        router.push("/order-success");
+      } else {
         throw new Error(data.message);
       }
     } catch (error: any) {
@@ -64,10 +69,9 @@ export default function CartPage() {
         theme: "light",
         transition: Bounce,
       });
-    }finally{
+    } finally {
       setIsCheckingOut(false);
     }
-    
   };
 
   const handleApplyCoupon = () => {
@@ -266,10 +270,41 @@ export default function CartPage() {
                   <span>Total:</span>
                   <span>₹{finalTotal}</span>
                 </div>
+                {/* Customer Info Form */}
+                <div className="space-y-3">
+                  <Input
+                    type="text"
+                    placeholder="Your Name"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    required
+                  />
+                  <div className="space-y-1">
+                    <Input
+                      type="tel"
+                      placeholder="Phone Number (10 digits)"
+                      value={customerPhone}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        setCustomerPhone(value);
+                      }}
+                      required
+                    />
+                    {customerPhone && customerPhone.length !== 10 && (
+                      <p className="text-red-500 text-sm">
+                        Please enter a valid 10-digit number
+                      </p>
+                    )}
+                  </div>
+                </div>
 
                 <Button
                   onClick={handleCheckout}
-                  disabled={isCheckingOut}
+                  disabled={
+                    isCheckingOut ||
+                    customerName.trim() === "" ||
+                    customerPhone.length !== 10
+                  }
                   className="w-full bg-pink-600 hover:bg-pink-700"
                 >
                   {isCheckingOut ? "Processing..." : "Proceed to Checkout"}

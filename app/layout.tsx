@@ -5,11 +5,10 @@ import "./globals.css";
 import { CartProvider } from "./context/CartContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import TopLoader from "./components/TopLoader";
+import TopLoader from "nextjs-toploader";
 import { Bounce, ToastContainer } from "react-toastify";
 import ReduxProvider from "@/redux/ReduxProvider";
 import ProductsInitialzer from "./components/ProductsInitializer";
-
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +18,7 @@ export const metadata: Metadata = {
     "Discover our hygienic, quality homemade cakes with customizable options. Fresh, healthy, and delicious cakes made with love.",
   generator: "v0.dev",
   icons: {
-    icon: "/images/favicon.png", // path relative to the /public directory
+    icon: "/images/favicon.png", 
   },
 };
 
@@ -32,11 +31,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ReduxProvider>
-          <ProductsInitialzer/>
+          <ProductsInitialzer />
           <CartProvider>
             <Header />
             <main className="min-h-screen">
-              <TopLoader />
+              <TopLoader/>
               {children}
             </main>
             <Footer />
@@ -53,9 +52,8 @@ export default function RootLayout({
             pauseOnHover
             theme="light"
             transition={Bounce}
-            />
-            </ReduxProvider>
-        
+          />
+        </ReduxProvider>
       </body>
     </html>
   );
