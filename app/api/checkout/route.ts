@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     const {cartInfo} = body;
     const {customerPhone, customerName} = body.customerInfo;
 
-    let message = `\nNew Cake Order 🎂\n\n`;
+    let message = `\nNew Cake Order From ${customerName}: ${customerPhone} 🎂\n\n`;
     let cartTotal = 0;
     for (let item of cartInfo) {
       message += `🧁 ${item.name} | ${item.weight} | Qty: ${item.quantity}\n₹${
