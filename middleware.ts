@@ -13,10 +13,9 @@ async function verifyJWT(token: string){
   }
 }
 
-
 export async function middleware(req: NextRequest) {
 
-  const protectedPaths = ['/admin/addproduct', '/api/editproduct', '/api/addproduct', '/api/deleteproduct/'];
+  const protectedPaths = ['/admin/addproduct', '/api/editproduct', '/api/addproduct', '/api/deleteproduct/', '/api/orders', '/admin/orders'];
   const pathname = req.nextUrl.pathname;
   const token = req.cookies.get("auth_token")?.value;
   
@@ -46,5 +45,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/login", '/api/editproduct/:id*', '/api/addproduct', '/api/deleteproduct/:id*'],
+  matcher: ["/admin/:path*", "/login", '/api/editproduct/:id*', '/api/addproduct', '/api/deleteproduct/:id*',
+     '/api/orders', '/api/orders/:id*', '/admin/orders', '/admin/orders/:id*'],
 };

@@ -11,17 +11,21 @@ interface Order {
 }
 
 const Orders = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[] | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        setLoading(true);
         const response = await fetch("/api/orders");
         if (!response.ok) throw new Error("Failed to fetch orders");
         const data = await response.json();
         setOrders(data.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
+      }finally{
+        setLoading(false);
       }
     };
 
@@ -35,11 +39,19 @@ const Orders = () => {
           <CardTitle className="text-2xl font-bold">Orders</CardTitle>
         </CardHeader>
         <CardContent>
-          {orders.length === 0 ? (
+          {loading? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600"></div>
+              <span className="ml-4 text-gray-600 text-lg">
+                Loading products...
+              </span>
+            </div>
+          )
+          :!orders || orders.length===0 ? (
             <p className="text-gray-600">No orders found.</p>
           ) : (
             <ul className="space-y-4">
-              {orders.map((order) => (
+              {orders && orders.map((order) => (
                 <li
                   key={order.order_id}
                   className="p-4 border rounded-md hover:shadow-md transition"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
 import { motion } from "framer-motion";
@@ -11,6 +11,11 @@ import { setAdmin } from "@/redux/adminSlice";
 const LoginPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+
+  useEffect(() => {
+    dispatch(setAdmin(false));
+  }, [])
+  
 
   const [credentials, setCredentials] = useState({
     username: "",
