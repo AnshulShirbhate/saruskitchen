@@ -72,7 +72,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2 transition-transform duration-300 hover:scale-110">
             <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center">
               {/* <span className="text-white font-bold text-lg">CC</span> */}
               <Image
@@ -82,8 +82,8 @@ export default function Header() {
                 height={200}
               />
             </div>
-            <div className="flex flex-col">
-              <span className="text-xl md:text-2xl font-bold text-pink-600">
+            <div className="flex flex-col ">
+              <span className="text-xl md:text-2xl font-bold text-pink-600 ">
                 {process.env.NEXT_PUBLIC_APP_NAME}
               </span>
               <span className="text-gray-500 text-xs">by Sarika Shirbhate</span>
@@ -99,7 +99,7 @@ export default function Header() {
                 className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
                   item.name === "Custom Cakes"
                     ? "bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600 text-white shadow-lg  hover:scale-105"
-                    : "text-gray-700 hover:text-pink-600"
+                    : "text-gray-700 hover:text-pink-600  hover:scale-110"
                 }`}
               >
                 {item.name === "Custom Cakes" ? "🎂 Custom Cakes" : item.name}
@@ -117,6 +117,14 @@ export default function Header() {
                 className="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors"
               >
                 Add Product
+              </Link>
+            )}
+            {isAdmin && (
+              <Link
+                href={"/admin/orders"}
+                className="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors"
+              >
+                Orders
               </Link>
             )}
             {isAdmin && (
@@ -186,6 +194,17 @@ export default function Header() {
                     setIsMenuOpen(false);
                   }}
                   href={"/admin/addproduct"}
+                  className="text-gray-700 hover:text-pink-600 block px-3 py-2 text-base font-medium"
+                >
+                  Add Product
+                </Link>
+              )}
+              {isAdmin && (
+                <Link
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                  }}
+                  href={"/admin/orders"}
                   className="text-gray-700 hover:text-pink-600 block px-3 py-2 text-base font-medium"
                 >
                   Add Product

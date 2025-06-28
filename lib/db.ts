@@ -20,4 +20,15 @@ pool.query(`
     );
 `);
 
+pool.query(`CREATE TABLE IF NOT EXISTS customorders(
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone NUMERIC NOT NULL,
+        instructions TEXT NULL,
+        image_url TEXT,
+        image_id TEXT 
+    );
+`);
+
 export default pool;

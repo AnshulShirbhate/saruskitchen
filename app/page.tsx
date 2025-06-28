@@ -16,7 +16,7 @@ export default function Home() {
     const loading = useSelector((state: RootState) =>{
       return state.products.loading;
     })
-  const topProducts = products && products.slice(0, 9)
+  const topProducts = products && products.slice(0, 3)
 
   return (
     <div className="min-h-screen">
