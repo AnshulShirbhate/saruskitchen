@@ -5,6 +5,7 @@ import ProductCard from "../components/ProductCard";
 import FilterSidebar, { type FilterState } from "../components/FilterSidebar";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
+import LoadingComponent from "../components/LoadingComponent";
 
 export default function ProductsPage() {
   const isAdmin = useSelector((state: RootState) => {
@@ -93,12 +94,7 @@ export default function ProductsPage() {
           </div>
 
           {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600"></div>
-              <span className="ml-4 text-gray-600 text-lg">
-                Loading products...
-              </span>
-            </div>
+            <LoadingComponent loaderName={"Products"}/>
           ) : (
             <div className="lg:w-3/4">
               <div className="mb-4">

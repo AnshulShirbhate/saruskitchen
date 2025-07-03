@@ -2,12 +2,14 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import LoadingComponent from "@/app/components/LoadingComponent";
 
 interface Order {
   order_id: number;
   customer_name: string;
   customer_phone: string;
   total: number;
+  order_date: string;
 }
 
 const Orders = () => {
@@ -40,12 +42,7 @@ const Orders = () => {
         </CardHeader>
         <CardContent>
           {loading? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600"></div>
-              <span className="ml-4 text-gray-600 text-lg">
-                Loading products...
-              </span>
-            </div>
+            <LoadingComponent loaderName={'Orders'}/>
           )
           :!orders || orders.length===0 ? (
             <p className="text-gray-600">No orders found.</p>
@@ -62,6 +59,8 @@ const Orders = () => {
                   <p>Customer: {order.customer_name}</p>
                   <p>Phone: {order.customer_phone}</p>
                   <p>Total: ₹{order.total}</p>
+                  <p>Date of Order: {order.order_date && order.order_date.split('T')[0]}</p>
+
                 </li>
               ))}
             </ul>

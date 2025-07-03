@@ -8,6 +8,7 @@ import ProductCard from "./components/ProductCard"
 import { Button } from "@/components/ui/button"
 import {useDispatch, useSelector} from 'react-redux';
 import { RootState } from "@/redux/store"
+import LoadingComponent from "./components/LoadingComponent"
 
 export default function Home() {
     const products = useSelector((state: RootState)=>{
@@ -41,10 +42,7 @@ export default function Home() {
           </div>
 
            {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600"></div>
-            <span className="ml-4 text-gray-600 text-lg">Loading products...</span>
-          </div>
+          <LoadingComponent loaderName={'Products'}/>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
            

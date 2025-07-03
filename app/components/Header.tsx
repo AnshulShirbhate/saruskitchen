@@ -207,7 +207,7 @@ export default function Header() {
                   href={"/admin/orders"}
                   className="text-gray-700 hover:text-pink-600 block px-3 py-2 text-base font-medium"
                 >
-                  Add Product
+                  Orders
                 </Link>
               )}
               {isAdmin && (

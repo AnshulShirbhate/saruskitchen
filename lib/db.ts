@@ -2,8 +2,8 @@ import pg from "pg";
 const { Pool } = pg;
 
 const pool = new Pool({
-    connectionString: process.env.DB_URI
-})
+    connectionString: process.env.DB_URI,
+});
 
 pool.query(`
     CREATE TABLE IF NOT EXISTS products (
@@ -15,7 +15,7 @@ pool.query(`
         image_id TEXT,
         weights JSONB NOT NULL,
         description TEXT NOT NULL,
-        isveg BOOLEAN NOT NULL,
+        isveg BOOLEAN NOT NULL ,
         created_at TIMESTAMP DEFAULT NOW()
     );
 `);
@@ -29,6 +29,16 @@ pool.query(`CREATE TABLE IF NOT EXISTS customorders(
         image_url TEXT,
         image_id TEXT 
     );
+`);
+
+pool.query(` CREATE TABLE IF NOT EXISTS ORDERS(
+          order_id SERIAL PRIMARY KEY,
+          customer_name TEXT NOT NULL,
+          customer_phone TEXT NOT NULL,
+          cart JSON,
+          total NUMERIC,
+          order_date DATE NOT NULL
+         );
 `);
 
 export default pool;

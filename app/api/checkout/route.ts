@@ -24,33 +24,25 @@ export async function POST(req: NextRequest) {
       cartTotal += item.price * item.quantity;
     }
     message += `Total Order Value: ${cartTotal}`;
-    // console.log(cartInfo);
-    // Query to store the order information in the database.
-    //     CREATE TABLE ORDERS(
-          // 	order_id SERIAL PRIMARY KEY,
-          // 	customer_name TEXT NOT NULL,
-          // 	customer_phone TEXT NOT NULL,
-          // 	customer_email TEXT,
-          // 	instructions TEXT,
-          // 	cart JSON,
-          // 	total NUMERIC,
-        // );
+
+    const today = new Date();
     await pool.query(
-      `INSERT INTO ORDERS(customer_name, customer_phone, cart, total) VALUES($1, $2, $3, $4)`,
-       [customerName, customerPhone, JSON.stringify(cartInfo), cartTotal]);
+      `INSERT INTO ORDERS(customer_name, customer_phone, cart, total, order_date) VALUES($1, $2, $3, $4, $5)`,
+      [customerName, customerPhone, JSON.stringify(cartInfo), cartTotal, today]
+    );
 
-    // const result = await client.messages.create({
-    //   body: message,
-    //   from: fromPhone,
-    //   to: toPhone,
-    // });
+    const result = await client.messages.create({
+      body: message,
+      from: fromPhone,
+      to: toPhone,
+    });
 
-    // // Send to Customer
-    // await client.messages.create({
-    //   body: `\n🎉 Thank you ${customerName} for your order! We’ve received your cake order worth ₹${cartTotal}. We'll contact you within 12 hours. ❤️`,
-    //   from: fromPhone,
-    //   to: "+91" + customerPhone,
-    // });
+    // Send to Customer
+    await client.messages.create({
+      body: `\n🎉 Thank you ${customerName} for your order! We’ve received your cake order worth ₹${cartTotal}. We'll contact you within 12 hours. ❤️`,
+      from: fromPhone,
+      to: "+91" + customerPhone,
+    });
 
     return NextResponse.json(
       { message: "Order Placed Successfully!" },
