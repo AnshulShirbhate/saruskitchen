@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Users {
+  id Int @default(autoincrement()) @id
+  name String
+  email String @unique
+  password String
+  role Role @default(USER)
+  createdAt DateTime @default(now())
+  orders Orders[]
+}
+
+model Products {
+  pid Int @default(autoincrement()) @id
+  name String
+  flavor String
+  category String
+  image_url String
+  image_id String
+  weights Json
+  description String
+  isveg Boolean
+  created_at DateTime @default(now())
+}
+
+model Orders {
+  oid Int @default(autoincrement()) @id
+  customer_id Int
+  cart Json
+  total Int
+  order_date DateTime @default(now())
+
+  customer Users @relation(fields: [customer_id], references: [id])
+}

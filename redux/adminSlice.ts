@@ -1,5 +1,4 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import { Bounce, toast } from 'react-toastify';
 
 export const checkIsAdmin = createAsyncThunk('admin/checkIsAdmin', async ()=>{
     try {

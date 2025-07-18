@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
   const isAdmin = useSelector((state: RootState) => state.admin.isAdmin);
+  const userLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const router = useRouter();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -114,30 +115,60 @@ export default function Header() {
             {isAdmin && (
               <Link
                 href={"/admin/addproduct"}
-                className="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors"
+                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600 hover:scale-110`}
               >
                 Add Product
               </Link>
             )}
-            {isAdmin && (
+
+            { userLoggedIn ? (
+              <>
               <Link
                 href={"/admin/orders"}
-                className="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors"
-              >
+                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600 hover:scale-110`}
+                >
                 Orders
               </Link>
-            )}
-            {isAdmin && (
+          
+            <div className="relative group">
               <button
-                onClick={handleLogout}
-                className="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors"
+                className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"
               >
-                Logout
+                <Image
+                  src="/placeholder-user.jpg"
+                  alt="Profile"
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover"
+                />
               </button>
+              <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
+                <button
+                  className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors"
+                  onClick={() => router.push('/profile')}
+                >
+                  My Profile
+                </button>
+                <button
+                  className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
+                  onClick={handleLogout}
+                  >
+                  Logout
+                </button>
+              </div>
+            </div>
+              </>
+            ): (
+              <Link
+                href={"/login"}
+                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600 hover:scale-110`}
+              >
+                Login
+              </Link>
             )}
           </nav>
 
-          {/* Cart and Mobile Menu */}
+{/* Cart and Mobile Menu */}
           <div className="flex items-center space-x-4">
             <Link href="/cart" className="relative">
               <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-pink-600" />
@@ -188,38 +219,65 @@ export default function Header() {
                 </Link>
               ))}
 
-              {isAdmin && (
+              {userLoggedIn ? (
+                <>
+                  {isAdmin && (
+                    <Link
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                      }}
+                      href={"/admin/addproduct"}
+                      className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                    >
+                      Add Product
+                    </Link>
+                  )}
+                  <Link
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                    }}
+                    href={"/admin/orders"}
+                    className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                  >
+                    Orders
+                  </Link>
+                  {/* Profile Avatar Dropdown for mobile */}
+                  <div className="relative group">
+                    <button
+                      className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"
+                    >
+                      <Image
+                        src="/placeholder-user.jpg"
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        className="rounded-full object-cover"
+                      />
+                    </button>
+                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
+                      <button
+                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors"
+                        onClick={() => { router.push('/profile'); setIsMenuOpen(false); }}
+                      >
+                        My Profile
+                      </button>
+                      <button
+                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
+                        onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
                 <Link
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                  }}
-                  href={"/admin/addproduct"}
-                  className="text-gray-700 hover:text-pink-600 block px-3 py-2 text-base font-medium"
+                  href={"/login"}
+                  className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  Add Product
+                  Login
                 </Link>
-              )}
-              {isAdmin && (
-                <Link
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                  }}
-                  href={"/admin/orders"}
-                  className="text-gray-700 hover:text-pink-600 block px-3 py-2 text-base font-medium"
-                >
-                  Orders
-                </Link>
-              )}
-              {isAdmin && (
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="text-gray-700 hover:text-pink-600 block px-3 py-2 text-base font-medium"
-                >
-                  Logout
-                </button>
               )}
             </div>
           </div>

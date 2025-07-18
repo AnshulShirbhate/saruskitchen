@@ -15,36 +15,56 @@ async function verifyJWT(token: string){
 
 export async function middleware(req: NextRequest) {
 
-  const protectedPaths = ['/admin/addproduct', '/api/editproduct', '/api/addproduct', '/api/deleteproduct/', '/api/orders', '/admin/orders'];
+  const adminPaths = ['/admin/addproduct', '/api/editproduct', '/api/addproduct', '/api/deleteproduct/', '/admin/orders'];
+  const protectedPaths = ['/cart', '/checkout', '/profile', '/orders', '/api/orders', '/api/checkout', '/api/profile'];
   const pathname = req.nextUrl.pathname;
   const token = req.cookies.get("auth_token")?.value;
   
+  
   if(pathname == "/login" && token){
-    return NextResponse.redirect(new URL("/admin/addproduct", req.url));
+    try {
+      const decoded = await verifyJWT(token);
+      return NextResponse.redirect(new URL("/", req.url));
+    } catch (error) {
+      const response = NextResponse.redirect(new URL('/login', req.url));
+      response.cookies.delete('auth_token');
+      return response;
+    }
   }else if(pathname == "/login" && !token){
     return NextResponse.next();
   }
 
 
-  const isProtected = protectedPaths.some((path)=>
+  const isAdminPath = adminPaths.some((path)=>
     pathname.startsWith(path))
 
-  if(!isProtected)return NextResponse.next();
-  
-  if (!token) return NextResponse.redirect(new URL("/login", req.url));
+  const isProtectedPath = protectedPaths.some((path)=>
+    pathname.startsWith(path));
 
-  const decoded = await verifyJWT(token);
-
-  if(!decoded || decoded.role != 'admin'){
-    const response = NextResponse.redirect(new URL('/login', req.url));
-    response.cookies.delete('auth_token');
-    return response;
+  if(isProtectedPath && token) {
+    const decoded = await verifyJWT(token);
+    if(!decoded){
+      const response = NextResponse.redirect(new URL('/login', req.url));
+      response.cookies.delete('auth_token');
+      return response;
+    }
+    return NextResponse.next();
+  }else if(isAdminPath && token){
+    const decoded = await verifyJWT(token);
+    if(!decoded || decoded.role != 'admin'){
+      const response = NextResponse.redirect(new URL('/login', req.url));
+      response.cookies.delete('auth_token');
+      return response;
+    }
+    return NextResponse.next();
+  } else {
+      const response = NextResponse.redirect(new URL('/login', req.url));
+      return response;
   }
-
-  return NextResponse.next();
 }
 
 export const config = {
   matcher: ["/admin/:path*", "/login", '/api/editproduct/:id*', '/api/addproduct', '/api/deleteproduct/:id*',
-     '/api/orders', '/api/orders/:id*', '/admin/orders', '/admin/orders/:id*'],
+     '/api/orders', '/api/orders/:id*', '/api/checkout', '/cart', '/checkout', '/profile', '/orders', '/api/orders', 
+    '/api/profile'],
 };
