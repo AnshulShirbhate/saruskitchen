@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bounce, toast } from "react-toastify";
 import { fetchProducts } from "@/redux/productSlice";
+import Link from "next/link";
 
 interface ProductCardProps {
   product: ProductInterface;
@@ -137,23 +138,25 @@ const handleEditSubmit = async () => {
     <>
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <div className="relative h-48">
+          <Link href={'/products/'+product.pid}>
           <Image
             src={product.image_url || "/placeholder.svg"}
             alt={product.name}
             fill
             className="object-cover"
-          />
+            />
           <div className="absolute top-2 right-2">
             <span
               className={`px-2 py-1 text-xs rounded-full ${
                 product.isveg
                   ? "bg-green-100 text-green-800"
                   : "bg-red-100 text-red-800"
-              }`}
+                }`}
             >
               {product.isveg ? "Veg" : "Non-Veg"}
             </span>
           </div>
+            </Link>
         </div>
 
         <div className="p-4">

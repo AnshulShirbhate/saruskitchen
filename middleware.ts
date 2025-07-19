@@ -17,7 +17,7 @@ async function verifyJWT(token: string){
 export async function middleware(req: NextRequest) {
 
   const adminPaths = ['/admin/addproduct', '/api/editproduct', '/api/addproduct', '/api/deleteproduct/', '/admin/allorders'];
-  const protectedPaths = ['/cart', '/checkout', '/profile', '/orders', '/api/orders', '/api/checkout', '/api/myprofile'];
+  const protectedPaths = ['/cart', '/checkout', '/orders', '/api/orders', '/api/checkout', '/myprofile'];
   const pathname = req.nextUrl.pathname;
   const token = req.cookies.get("auth_token")?.value;
   
@@ -75,5 +75,5 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: ["/admin/:path*", "/login", '/api/editproduct/:id*', '/api/addproduct', '/api/deleteproduct/:id*',
      '/api/orders', '/api/orders/:id*', '/api/checkout', '/cart', '/checkout', '/myprofile', '/orders', '/api/orders', 
-    '/api/profile'],
+    '/api/myprofile'],
 };

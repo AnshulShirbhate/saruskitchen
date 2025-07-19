@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import LoadingComponent from "@/app/components/LoadingComponent";
+import { motion } from "framer-motion";
 
 interface Order {
   oid: number;
@@ -50,20 +51,24 @@ const Orders = () => {
             <p className="text-gray-600">No orders found.</p>
           ) : (
             <ul className="space-y-4">
-              {orders && orders.map((order) => (
-                <li
+              {orders.map((order) => (
+                <motion.li
                   key={order.oid}
-                  className="p-4 border rounded-md hover:shadow-md transition"
+                  className="p-4 border rounded-md hover:shadow-lg transition-all flex items-center justify-between gap-4 bg-white"
+                  whileHover={{ scale: 1.02 }}
                 >
                   <Link href={`/orders/${order.oid}`} className="text-pink-600 font-medium hover:underline">
                     Order #{order.oid}
                   </Link>
-                  <p>Customer: {order.customer.name}</p>
-                  <p>Phone: {order.customer.phone}</p>
-                  <p>Total: ₹{order.total}</p>
-                  <p>Date of Order: {order.order_date && order.order_date.split('T')[0]}</p>
-
-                </li>
+                  <div className="text-gray-700">
+                    <p>Customer: {order.customer.name}</p>
+                    <p>Phone: {order.customer.phone}</p>
+                  </div>
+                  <div className="text-gray-700">
+                    <p>Total: ₹{order.total}</p>
+                    <p>Date: {order.order_date && order.order_date.split('T')[0]}</p>
+                  </div>
+                </motion.li>
               ))}
             </ul>
           )}

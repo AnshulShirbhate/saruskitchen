@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import pool from "@/lib/db";
+import {prisma} from "@/lib/prisma";
 
 export async function PUT(
   req: NextRequest,
@@ -11,12 +11,16 @@ export async function PUT(
   const { name, flavor, category, weights, isveg } = body;
 
   try {
-    await pool.query(
-      `UPDATE products 
-       SET name = $1, flavor = $2, category = $3, weights = $4, isveg = $5
-       WHERE id = $6`,
-      [name, flavor, category, weights, isveg, id]
-    );
+    await prisma.products.update({
+      where: {pid: Number(id)},
+      data: {
+        name,
+        flavor,
+        category,
+        weights,
+        isveg
+      }
+    })
 
     return NextResponse.json({ message: "Product updated successfully" }, { status: 200 });
   } catch (error) {
