@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import pool from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import cloudinary from '@/lib/cloudinary';
 
 export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
   const { id: productId } = await context.params;
 
   try {
-    const productResult = await pool.query("SELECT * FROM products WHERE id = $1", [productId]);
-    const product = productResult.rows[0];
+    const product = await prisma.products.findUnique({
+      where: {
+        pid: Number(productId)
+      }
+    })
 
     if (!product) {
       return NextResponse.json({ message: "Product not found." }, { status: 404 });
@@ -21,7 +24,11 @@ export async function DELETE(req: NextRequest, context: { params: { id: string }
       return NextResponse.json({ message: "Cloudinary Deletion Error!" }, { status: 404 });
     }
 
-    await pool.query("DELETE FROM products WHERE id = $1", [productId]);
+    await prisma.products.delete({
+      where: {
+        pid: Number(productId)
+      }
+    })
 
     return NextResponse.json({ message: "Product and image deleted successfully." }, { status: 200 });
   } catch (error) {
