@@ -4,21 +4,19 @@ import { Award, Users, Clock, Heart } from "lucide-react"
 
 export default function AboutPage() {
   const stats = [
-    { icon: Users, label: "Happy Customers", value: "10,000+" },
-    { icon: Clock, label: "Years of Experience", value: "15+" },
-    { icon: Award, label: "Awards Won", value: "25+" },
-    { icon: Heart, label: "Cakes Made", value: "50,000+" },
+    { icon: Users, label: "Happy Customers", value: "1000+" },
+    { icon: Clock, label: "Years of Experience", value: "5+" },
+    { icon: Heart, label: "Cakes Made", value: "1500+" },
   ]
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">About Creamy Creations</h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Crafting sweet memories since 2009, we are passionate about creating the perfect cake for every
+              Crafting sweet memories since 2020, we are passionate about creating the perfect cake for every
               celebration.
             </p>
           </div>
@@ -58,7 +56,7 @@ export default function AboutPage() {
       {/* Stats Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
             {stats.map((stat, index) => (
               <Card key={index} className="text-center">
                 <CardContent className="p-6">
@@ -103,41 +101,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
-            <p className="text-lg text-gray-600">
-              Our passionate team of bakers and designers work together to create magic in every cake.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { name: "Sarah Johnson", role: "Head Baker & Founder", image: "/placeholder.svg?height=300&width=300" },
-              { name: "Mike Chen", role: "Cake Designer", image: "/placeholder.svg?height=300&width=300" },
-              { name: "Emily Davis", role: "Pastry Chef", image: "/placeholder.svg?height=300&width=300" },
-            ].map((member, index) => (
-              <Card key={index} className="text-center">
-                <CardContent className="p-6">
-                  <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden">
-                    <Image
-                      src={member.image || "/placeholder.svg"}
-                      alt={member.name}
-                      width={128}
-                      height={128}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="text-gray-600">{member.role}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

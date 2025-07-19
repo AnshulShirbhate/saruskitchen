@@ -1,21 +1,31 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-export const checkIsLoggedIn = createAsyncThunk('user/checkIsLoggedIn', async ()=>{
+export const checkIsLoggedIn = createAsyncThunk('user/checkIsLoggedIn', async () => {
     try {
-          const response = await fetch("/api/checkisloggedin");;
-          const data = await response.json();
-          return data.isLoggedIn;
-        } catch (error) {
-           console.log("Some issue in the server!", error)
-        }
+        const response = await fetch("/api/checkisloggedin");;
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log("Some issue in the server!", error)
+    }
 })
+
+interface UserInterface {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    role: string;
+}
 
 interface adminInitialStateInterface {
     isLoggedIn: boolean;
+    user: UserInterface | null;
 }
 
 const initialState: adminInitialStateInterface = {
-    isLoggedIn: false
+    isLoggedIn: false,
+    user: null
 }
 
 const userSlice = createSlice({
@@ -26,12 +36,13 @@ const userSlice = createSlice({
             state.isLoggedIn = action.payload;
         }
     },
-    extraReducers: (builder) =>{
-        builder.addCase(checkIsLoggedIn.fulfilled, (state, action)=>{
-            state.isLoggedIn = action.payload;
+    extraReducers: (builder) => {
+        builder.addCase(checkIsLoggedIn.fulfilled, (state, action) => {
+            state.isLoggedIn = action.payload.isLoggedIn;
+            state.user = action.payload.user;
         })
     }
 })
 
-export const {setLoggedIn} = userSlice.actions;
+export const { setLoggedIn } = userSlice.actions;
 export default userSlice.reducer;

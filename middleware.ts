@@ -13,10 +13,11 @@ async function verifyJWT(token: string){
   }
 }
 
+
 export async function middleware(req: NextRequest) {
 
-  const adminPaths = ['/admin/addproduct', '/api/editproduct', '/api/addproduct', '/api/deleteproduct/', '/admin/orders'];
-  const protectedPaths = ['/cart', '/checkout', '/profile', '/orders', '/api/orders', '/api/checkout', '/api/profile'];
+  const adminPaths = ['/admin/addproduct', '/api/editproduct', '/api/addproduct', '/api/deleteproduct/', '/admin/allorders'];
+  const protectedPaths = ['/cart', '/checkout', '/profile', '/orders', '/api/orders', '/api/checkout', '/api/myprofile'];
   const pathname = req.nextUrl.pathname;
   const token = req.cookies.get("auth_token")?.value;
   
@@ -48,15 +49,23 @@ export async function middleware(req: NextRequest) {
       response.cookies.delete('auth_token');
       return response;
     }
-    return NextResponse.next();
+    const response = NextResponse.next();
+
+    response.headers.set("user-id", String(decoded.userId));
+    response.headers.set("user-role", String(decoded.role));
+    return response;
   }else if(isAdminPath && token){
     const decoded = await verifyJWT(token);
-    if(!decoded || decoded.role != 'admin'){
+    if(!decoded || decoded.role != 'ADMIN'){
       const response = NextResponse.redirect(new URL('/login', req.url));
       response.cookies.delete('auth_token');
       return response;
     }
-    return NextResponse.next();
+    const response = NextResponse.next();
+
+    response.headers.set("user-id", String(decoded.userId));
+    response.headers.set("user-role", String(decoded.role));
+    return response;
   } else {
       const response = NextResponse.redirect(new URL('/login', req.url));
       return response;
@@ -65,6 +74,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: ["/admin/:path*", "/login", '/api/editproduct/:id*', '/api/addproduct', '/api/deleteproduct/:id*',
-     '/api/orders', '/api/orders/:id*', '/api/checkout', '/cart', '/checkout', '/profile', '/orders', '/api/orders', 
+     '/api/orders', '/api/orders/:id*', '/api/checkout', '/cart', '/checkout', '/myprofile', '/orders', '/api/orders', 
     '/api/profile'],
 };

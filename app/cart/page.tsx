@@ -10,16 +10,21 @@ import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { Bounce, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 export default function CartPage() {
   const router = useRouter();
+  const user = useSelector((state: RootState)=>{
+    return state.user.user;
+  })
   const { state, dispatch } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
 
-  const [customerName, setCustomerName] = useState("");
-  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerName, setCustomerName] = useState(user?.name || "");
+  const [customerPhone, setCustomerPhone] = useState(user?.phone ||  "");
 
   const updateQuantity = (id: string, quantity: number) => {
     dispatch({ type: "UPDATE_QUANTITY", payload: { id, quantity } });
@@ -129,7 +134,7 @@ export default function CartPage() {
                   {state.items.map((item) => (
                     <div
                       key={
-                        item.id +
+                        item.pid +
                         Math.random() * new Date().getUTCMilliseconds()
                       }
                       className="flex items-center space-x-4 p-4 border rounded-lg"
@@ -159,7 +164,7 @@ export default function CartPage() {
                           variant="outline"
                           size="icon"
                           onClick={() =>
-                            updateQuantity(item.id, item.quantity - 1)
+                            updateQuantity(item.pid, item.quantity - 1)
                           }
                           disabled={item.quantity <= 1}
                         >
@@ -170,7 +175,7 @@ export default function CartPage() {
                           value={item.quantity}
                           onChange={(e) =>
                             updateQuantity(
-                              item.id,
+                              item.pid,
                               Number.parseInt(e.target.value) || 1
                             )
                           }
@@ -181,7 +186,7 @@ export default function CartPage() {
                           variant="outline"
                           size="icon"
                           onClick={() =>
-                            updateQuantity(item.id, item.quantity + 1)
+                            updateQuantity(item.pid, item.quantity + 1)
                           }
                         >
                           <Plus className="h-2 w-2 md:h-4 md:w-4" />
@@ -195,7 +200,7 @@ export default function CartPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeItem(item.pid)}
                           className="text-red-600 hover:text-red-700 mt-1"
                         >
                           <Trash2 className="h-4 w-4" />

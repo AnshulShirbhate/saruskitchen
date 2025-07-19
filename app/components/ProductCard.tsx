@@ -51,7 +51,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const handleDelete = async () => {
     setDeleting(true);
     try {
-      const res = await fetch(`/api/deleteproduct/${product.id}`, {
+      const res = await fetch(`/api/deleteproduct/${product.pid}`, {
         method: "DELETE",
       });
 
@@ -100,7 +100,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 const handleEditSubmit = async () => {
   setEditing(true);
   try {
-    const res = await fetch(`/api/editproduct/${product.id}`, {
+    const res = await fetch(`/api/editproduct/${product.pid}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -4,8 +4,12 @@ import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { fetchProducts } from "@/redux/productSlice";
+import { AppDispatch } from "@/redux/store";
+import { useDispatch } from "react-redux";
 
 const AddProductForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -75,6 +79,7 @@ const AddProductForm = () => {
       });
 
       if (response.ok) {
+        dispatch(fetchProducts());
         toast.success("Product Added!", {
           position: "bottom-center",
           autoClose: 2000,

@@ -5,11 +5,13 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import LoadingComponent from "@/app/components/LoadingComponent";
 
 interface Order {
-  order_id: number;
-  customer_name: string;
-  customer_phone: string;
+  oid: number;
   total: number;
   order_date: string;
+  customer: {
+    name: string;
+    phone: string;
+  }
 }
 
 const Orders = () => {
@@ -23,7 +25,7 @@ const Orders = () => {
         const response = await fetch("/api/orders");
         if (!response.ok) throw new Error("Failed to fetch orders");
         const data = await response.json();
-        setOrders(data.data);
+        setOrders(data.orders);
       } catch (error) {
         console.error("Error fetching orders:", error);
       }finally{
@@ -50,14 +52,14 @@ const Orders = () => {
             <ul className="space-y-4">
               {orders && orders.map((order) => (
                 <li
-                  key={order.order_id}
+                  key={order.oid}
                   className="p-4 border rounded-md hover:shadow-md transition"
                 >
-                  <Link href={`/orders/${order.order_id}`} className="text-pink-600 font-medium hover:underline">
-                    Order #{order.order_id}
+                  <Link href={`/orders/${order.oid}`} className="text-pink-600 font-medium hover:underline">
+                    Order #{order.oid}
                   </Link>
-                  <p>Customer: {order.customer_name}</p>
-                  <p>Phone: {order.customer_phone}</p>
+                  <p>Customer: {order.customer.name}</p>
+                  <p>Phone: {order.customer.phone}</p>
                   <p>Total: ₹{order.total}</p>
                   <p>Date of Order: {order.order_date && order.order_date.split('T')[0]}</p>
 

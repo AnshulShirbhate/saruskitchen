@@ -4,11 +4,16 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
 import { motion } from "framer-motion";
+import { setLoggedIn } from "@/redux/userSlice";
+import { checkIsAdmin } from "@/redux/adminSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 
 
 
 const SignupPage = () => {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -34,7 +39,10 @@ const SignupPage = () => {
       });
 
       if (res.ok) {
-        toast.success("Account created! You can now log in.", {
+        const data = await res.json();
+        dispatch(setLoggedIn(true));
+        dispatch(checkIsAdmin());
+        toast.success(data.message, {
           position: "bottom-center",
           autoClose: 2000,
           hideProgressBar: false,
@@ -45,7 +53,7 @@ const SignupPage = () => {
           theme: "colored",
           transition: Bounce,
         });
-        router.push("/login");
+        router.push("/");
       } else {
         const err = await res.text();
         toast.error(err || "❌ Signup failed");

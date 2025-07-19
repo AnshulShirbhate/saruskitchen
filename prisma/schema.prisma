@@ -17,6 +17,7 @@ model Users {
   id Int @default(autoincrement()) @id
   name String
   email String @unique
+  phone String 
   password String
   role Role @default(USER)
   createdAt DateTime @default(now())

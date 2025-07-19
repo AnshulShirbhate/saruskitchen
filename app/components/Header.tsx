@@ -12,6 +12,7 @@ import { AppDispatch } from "@/redux/store";
 import { setAdmin } from "@/redux/adminSlice";
 import { Bounce, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { setLoggedIn } from "@/redux/userSlice";
 
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,6 +37,7 @@ export default function Header() {
 
       if (res.ok) {
         dispatch(setAdmin(false));
+        dispatch(setLoggedIn(false));
         toast.success("Successfully Logged Out!", {
           position: "bottom-center",
           autoClose: 2000,
@@ -124,7 +126,7 @@ export default function Header() {
             { userLoggedIn ? (
               <>
               <Link
-                href={"/admin/orders"}
+                href={"/orders"}
                 className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600 hover:scale-110`}
                 >
                 Orders
@@ -145,9 +147,10 @@ export default function Header() {
               <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
                 <button
                   className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors"
-                  onClick={() => router.push('/profile')}
                 >
-                  My Profile
+                  <Link href={'/myprofile'}>
+                    My Profile
+                  </Link>
                 </button>
                 <button
                   className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
@@ -236,12 +239,11 @@ export default function Header() {
                     onClick={() => {
                       setIsMenuOpen(false);
                     }}
-                    href={"/admin/orders"}
+                    href={"/orders"}
                     className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
                   >
                     Orders
                   </Link>
-                  {/* Profile Avatar Dropdown for mobile */}
                   <div className="relative group">
                     <button
                       className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"

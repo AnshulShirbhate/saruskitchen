@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
-// import pool from "@/lib/db";
 import { prisma } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
@@ -44,20 +43,6 @@ export async function POST(req: NextRequest) {
         .end(buffer);
     });
 
-    // await pool.query(
-    //   `INSERT INTO products (name, flavor, category, image_url, image_id, weights, description, isveg)
-    //    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-    //   [
-    //     name,
-    //     flavor,
-    //     category,
-    //     uploadResult.secure_url,
-    //     uploadResult.public_id,
-    //     weights,
-    //     description,
-    //     isVeg
-    //   ]
-    // );
     await prisma.products.create({
       data: {
         name,

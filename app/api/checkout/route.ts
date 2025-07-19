@@ -1,4 +1,4 @@
-import pool from "@/lib/db";
+import {prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from "next/server";
 import twilio from "twilio";
 
@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { cartInfo } = body;
     const { customerPhone, customerName } = body.customerInfo;
+    const customerId = Number(req.headers.get('user-id'));
 
     let message = `\nNew Cake Order From ${customerName}: ${customerPhone} 🎂\n\n`;
     let cartTotal = 0;
@@ -26,10 +27,14 @@ export async function POST(req: NextRequest) {
     message += `Total Order Value: ${cartTotal}`;
 
     const today = new Date();
-    await pool.query(
-      `INSERT INTO ORDERS(customer_name, customer_phone, cart, total, order_date) VALUES($1, $2, $3, $4, $5)`,
-      [customerName, customerPhone, JSON.stringify(cartInfo), cartTotal, today]
-    );
+  
+    const newOrder = await prisma.orders.create({
+      data: {
+        customer_id: customerId,
+        total: cartTotal,
+        cart: JSON.stringify(cartInfo),
+      }
+    })
 
     const result = await client.messages.create({
       body: message,

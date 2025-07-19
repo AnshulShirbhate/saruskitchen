@@ -6,7 +6,7 @@ interface WeightsInterface {
 }
 
 export default interface Product {
-  id: string;
+  pid: string;
   name: string;
   price: number;
   weights: WeightsInterface;

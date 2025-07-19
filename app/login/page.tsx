@@ -4,12 +4,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
 import { motion } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { setLoggedIn } from "@/redux/userSlice";
+import { checkIsAdmin, setAdmin } from "@/redux/adminSlice";
 
 
 const LoginPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [credentials, setCredentials] = useState({
-    username: "",
+    email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
@@ -18,6 +23,11 @@ const LoginPage = () => {
     const { name, value } = e.target;
     setCredentials({ ...credentials, [name]: value });
   };
+
+  useEffect(() => {
+    dispatch(setLoggedIn(false));
+    dispatch(setAdmin(false));
+  }, []);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -31,6 +41,8 @@ const LoginPage = () => {
       });
 
       if (res.ok) {
+        dispatch(setLoggedIn(true));
+        dispatch(checkIsAdmin())
         toast.success("Welcome! You are now logged in.", {
           position: "bottom-center",
           autoClose: 2000,
@@ -44,8 +56,8 @@ const LoginPage = () => {
         });
         router.push("/");
       } else {
-        const err = await res.text();
-        toast.error(err || "❌ Login failed");
+        const data = await res.json();
+        toast.error(data.message || "❌ Login failed");
       }
     } catch (err) {
       toast.error("⚠️ Network error");
@@ -69,9 +81,9 @@ const LoginPage = () => {
         <div className="space-y-6">
           <input
             type="text"
-            name="username"
-            placeholder="Username or Email"
-            value={credentials.username}
+            name="email"
+            placeholder="Email"
+            value={credentials.email}
             onChange={handleChange}
             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 bg-gray-50 text-gray-700"
             required

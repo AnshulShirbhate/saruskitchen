@@ -1,22 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { prisma } from '@/lib/prisma';
+import bcrypt from 'bcrypt';
 
-const SECRET_KEY = process.env.JWT_SECRET || "your-secret-key"; // Replace with a strong secret in production
+const SECRET_KEY = process.env.JWT_SECRET || "your-secret-key";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { username, password } = body;
 
-  const validAdmin = username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD;
-
-  if (!validAdmin) {
-    return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
+  const user = await prisma.users.findUnique({
+    where: {
+      email: body.email
+    }
+  });
+  if(!user) {
+    return NextResponse.json({message: "Email or Password is incorrect!"}, {status: 400});
+  }
+  const isPasswordValid = await bcrypt.compare(body.password, user.password);
+  if(isPasswordValid === false) {
+    return NextResponse.json({message: "Email or Password is incorrect!"}, {status: 400});
   }
 
+  const {password, ...userWithoutPassword} = user;
+
   const payload = {
-    uid: "admin-uid-123", 
-    role: "admin",
+    userId: user.id, 
+    role: user.role,
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1d" });
@@ -29,5 +39,5 @@ export async function POST(req: NextRequest) {
     maxAge: 60 * 60 * 24,
   });
 
-  return NextResponse.json({ message: "Login successful" }, { status: 200 });
+  return NextResponse.json({ message: "Login successful", user: userWithoutPassword }, { status: 200 });
 }

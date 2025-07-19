@@ -8,5 +8,4 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({message: "Failed to log out!"}, {status: 500});
   }
-  return NextResponse.json({ message: "Login successful" }, { status: 200 });
 }
