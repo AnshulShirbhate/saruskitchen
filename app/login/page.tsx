@@ -54,7 +54,7 @@ const LoginPage = () => {
           theme: "colored",
           transition: Bounce,
         });
-        router.push("/");
+        window.location.href="/";
       } else {
         const data = await res.json();
         toast.error(data.message || "❌ Login failed");

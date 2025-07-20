@@ -49,7 +49,7 @@ export default function Header() {
           theme: "light",
           transition: Bounce,
         });
-        router.push("/login");
+        window.location.href="/login";
       } else {
         throw new Error(data.message);
       }
@@ -86,7 +86,7 @@ export default function Header() {
               />
             </div>
             <div className="flex flex-col ">
-              <span className="text-xl md:text-2xl font-bold text-pink-600 ">
+              <span className="text-lg md:text-2xl font-bold text-pink-600 ">
                 {process.env.NEXT_PUBLIC_APP_NAME}
               </span>
               <span className="text-gray-500 text-xs">by Sarika Shirbhate</span>
@@ -94,7 +94,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden lg:flex space-x-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -171,8 +171,34 @@ export default function Header() {
             )}
           </nav>
 
-
           <div className="flex items-center space-x-4">
+            <div className="relative group md:hidden">
+                    <button
+                      className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"
+                    >
+                      <Image
+                        src="/placeholder-user.jpg"
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        className="rounded-full object-cover"
+                      />
+                    </button>
+                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
+                      <button
+                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors"
+                        onClick={() => { router.push('/profile'); setIsMenuOpen(false); }}
+                      >
+                        My Profile
+                      </button>
+                      <button
+                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
+                        onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </div>
             <Link href={"/cart"} className="relative">
               <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-pink-600" />
               {state.items.length > 0 && (
@@ -186,7 +212,7 @@ export default function Header() {
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden"
+              className="lg:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? (
@@ -244,33 +270,7 @@ export default function Header() {
                   >
                     Orders
                   </Link>
-                  <div className="relative group">
-                    <button
-                      className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"
-                    >
-                      <Image
-                        src="/placeholder-user.jpg"
-                        alt="Profile"
-                        width={40}
-                        height={40}
-                        className="rounded-full object-cover"
-                      />
-                    </button>
-                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
-                      <button
-                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors"
-                        onClick={() => { router.push('/profile'); setIsMenuOpen(false); }}
-                      >
-                        My Profile
-                      </button>
-                      <button
-                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
-                        onClick={() => { handleLogout(); setIsMenuOpen(false); }}
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  </div>
+                  
                 </>
               ) : (
                 <Link
