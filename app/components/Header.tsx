@@ -49,7 +49,7 @@ export default function Header() {
           theme: "light",
           transition: Bounce,
         });
-        window.location.href="/login";
+        window.location.href = "/login";
       } else {
         throw new Error(data.message);
       }
@@ -99,11 +99,10 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
-                  item.name === "Custom Cakes"
+                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${item.name === "Custom Cakes"
                     ? "bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600 text-white shadow-lg  hover:scale-105"
                     : "text-gray-700 hover:text-pink-600  hover:scale-110"
-                }`}
+                  }`}
               >
                 {item.name === "Custom Cakes" ? "🎂 Custom Cakes" : item.name}
                 {item.name === "Custom Cakes" && (
@@ -123,16 +122,56 @@ export default function Header() {
               </Link>
             )}
 
-            { userLoggedIn ? (
+            {userLoggedIn ? (
               <>
-              <Link
-                href={"/orders"}
-                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600 hover:scale-110`}
+                <Link
+                  href={"/orders"}
+                  className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600 hover:scale-110`}
                 >
-                Orders
+                  Orders
+                </Link>
+
+                <div className="relative group">
+                  <button
+                    className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"
+                  >
+                    <Image
+                      src="/placeholder-user.jpg"
+                      alt="Profile"
+                      width={40}
+                      height={40}
+                      className="rounded-full object-cover"
+                    />
+                  </button>
+                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
+                    <button
+                      className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors"
+                    >
+                      <Link href={'/myprofile'}>
+                        My Profile
+                      </Link>
+                    </button>
+                    <button
+                      className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <Link
+                href={"/login"}
+                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600 hover:scale-110`}
+              >
+                Login
               </Link>
-          
-            <div className="relative group">
+            )}
+          </nav>
+
+          <div className="flex items-center space-x-4">
+            {userLoggedIn && <div className="relative group md:hidden">
               <button
                 className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"
               >
@@ -154,51 +193,12 @@ export default function Header() {
                 </button>
                 <button
                   className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
-                  onClick={handleLogout}
-                  >
+                  onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                >
                   Logout
                 </button>
               </div>
-            </div>
-              </>
-            ): (
-              <Link
-                href={"/login"}
-                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600 hover:scale-110`}
-              >
-                Login
-              </Link>
-            )}
-          </nav>
-
-          <div className="flex items-center space-x-4">
-            <div className="relative group md:hidden">
-                    <button
-                      className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"
-                    >
-                      <Image
-                        src="/placeholder-user.jpg"
-                        alt="Profile"
-                        width={40}
-                        height={40}
-                        className="rounded-full object-cover"
-                      />
-                    </button>
-                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
-                      <button
-                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors"
-                        onClick={() => { router.push('/profile'); setIsMenuOpen(false); }}
-                      >
-                        My Profile
-                      </button>
-                      <button
-                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
-                        onClick={() => { handleLogout(); setIsMenuOpen(false); }}
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  </div>
+            </div>}
             <Link href={"/cart"} className="relative">
               <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-pink-600" />
               {state.items.length > 0 && (
@@ -232,11 +232,10 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 ${
-                    item.name === "Custom Cakes"
+                  className={`relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 ${item.name === "Custom Cakes"
                       ? "bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600 text-white shadow-lg hover:scale-105"
                       : "text-gray-700 hover:text-pink-600"
-                  }`}
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name === "Custom Cakes" ? "🎂 Custom Cakes" : item.name}
@@ -270,7 +269,7 @@ export default function Header() {
                   >
                     Orders
                   </Link>
-                  
+
                 </>
               ) : (
                 <Link
