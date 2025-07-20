@@ -6,7 +6,7 @@ import { Bounce, toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import { setLoggedIn } from "@/redux/userSlice";
+import { checkIsLoggedIn, setLoggedIn } from "@/redux/userSlice";
 import { checkIsAdmin, setAdmin } from "@/redux/adminSlice";
 
 
@@ -41,8 +41,8 @@ const LoginPage = () => {
       });
 
       if (res.ok) {
-        dispatch(setLoggedIn(true));
         dispatch(checkIsAdmin())
+        dispatch(checkIsLoggedIn());
         toast.success("Welcome! You are now logged in.", {
           position: "bottom-center",
           autoClose: 2000,
