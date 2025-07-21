@@ -4,7 +4,6 @@ import type React from "react";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,10 +12,8 @@ import { Bounce, toast } from "react-toastify";
 import DOMPurify from 'dompurify';
 
 export default function CustomCakesPage() {
+
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
     instructions: "",
     image: null as File | null,
   });
@@ -38,16 +35,13 @@ export default function CustomCakesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formDataObj = new FormData();
-    formDataObj.append("name", formData.name);
-    formDataObj.append("email", formData.email);
-    formDataObj.append("phone", formData.phone);
     formDataObj.append("instruction", formData.instructions);
     if (formData.image) {
       formDataObj.append("image", formData.image);
     }
 
     try {
-      const response = await fetch("/api/customcakeorder", {
+      const response = await fetch("/api/customorder", {
         method: "POST",
         body: formDataObj,
       });
@@ -66,9 +60,6 @@ export default function CustomCakesPage() {
         });
         setIsSubmitted(true);
         setFormData({
-          name: "",
-          email: "",
-          phone: "",
           instructions: "",
           image: null as File | null,
         });
@@ -141,44 +132,6 @@ export default function CustomCakesPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <Label htmlFor="name">Full Name *</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="email">Email Address *</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="phone">Phone Number *</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    required
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="mt-1"
-                  />
-                </div>
 
                 <div>
                   <Label htmlFor="instructions">Special Instructions</Label>
@@ -230,7 +183,7 @@ export default function CustomCakesPage() {
                 <Button
                   type="submit"
                   className="w-full bg-pink-600 hover:bg-pink-700"
-                  disabled={!formData.name || !formData.email || formData.phone.length!==10 || !formData.instructions}
+                  disabled={ !formData.instructions || !formData.image}
                 >
                   Submit Custom Order
                 </Button>

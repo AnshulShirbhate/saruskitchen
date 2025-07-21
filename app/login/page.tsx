@@ -52,7 +52,9 @@ const LoginPage = () => {
           theme: "colored",
           transition: Bounce,
         });
-        window.location.href="/";
+        setTimeout(()=>{
+          window.location.href="/";
+        }, 2000)
       } else {
         const data = await res.json();
         toast.error(data.message || "❌ Login failed");
