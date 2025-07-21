@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { setLoggedIn } from "@/redux/userSlice";
+import { checkIsLoggedIn, setLoggedIn } from "@/redux/userSlice";
 import { checkIsAdmin } from "@/redux/adminSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
@@ -40,8 +40,6 @@ const SignupPage = () => {
 
       if (res.ok) {
         const data = await res.json();
-        dispatch(setLoggedIn(true));
-        dispatch(checkIsAdmin());
         toast.success(data.message, {
           position: "bottom-center",
           autoClose: 2000,
@@ -53,7 +51,7 @@ const SignupPage = () => {
           theme: "colored",
           transition: Bounce,
         });
-        router.push("/");
+        window.location.href="/";
       } else {
         const err = await res.text();
         toast.error(err || "❌ Signup failed");

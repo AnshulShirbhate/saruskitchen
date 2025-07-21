@@ -41,8 +41,6 @@ const LoginPage = () => {
       });
 
       if (res.ok) {
-        dispatch(checkIsAdmin())
-        dispatch(checkIsLoggedIn());
         toast.success("Welcome! You are now logged in.", {
           position: "bottom-center",
           autoClose: 2000,
