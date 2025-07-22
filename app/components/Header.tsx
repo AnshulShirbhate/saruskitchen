@@ -11,21 +11,19 @@ import { RootState } from "@/redux/store";
 import { AppDispatch } from "@/redux/store";
 import { setAdmin } from "@/redux/adminSlice";
 import { Bounce, toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { setLoggedIn } from "@/redux/userSlice";
 
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
   const isAdmin = useSelector((state: RootState) => state.admin.isAdmin);
   const userLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-  const router = useRouter();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { state } = useCart();
 
   const navigation = [
     { name: "Home", href: "/" },
-    { name: "Products", href: "/products" },
+    { name: "Products", href: "/allproducts" },
     { name: "Custom Cakes", href: "/custom-cakes" },
     { name: "About", href: "/about" },
   ];
@@ -75,7 +73,10 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 transition-transform duration-300 hover:scale-110">
+          <Link
+            href="/"
+            className="flex items-center space-x-2 transition-transform duration-300 hover:scale-110"
+          >
             <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center">
               {/* <span className="text-white font-bold text-lg">CC</span> */}
               <Image
@@ -99,10 +100,11 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${item.name === "Custom Cakes"
+                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
+                  item.name === "Custom Cakes"
                     ? "bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600 text-white shadow-lg  hover:scale-105"
                     : "text-gray-700 hover:text-pink-600  hover:scale-110"
-                  }`}
+                }`}
               >
                 {item.name === "Custom Cakes" ? "🎂 Custom Cakes" : item.name}
                 {item.name === "Custom Cakes" && (
@@ -132,9 +134,7 @@ export default function Header() {
                 </Link>
 
                 <div className="relative group">
-                  <button
-                    className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"
-                  >
+                  <button className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all">
                     <Image
                       src="/placeholder-user.jpg"
                       alt="Profile"
@@ -144,12 +144,8 @@ export default function Header() {
                     />
                   </button>
                   <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
-                    <button
-                      className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors"
-                    >
-                      <Link href={'/myprofile'}>
-                        My Profile
-                      </Link>
+                    <button className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors">
+                      <Link href={"/myprofile"}>My Profile</Link>
                     </button>
                     <button
                       className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
@@ -171,34 +167,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-4">
-            {userLoggedIn && <div className="relative group md:hidden">
-              <button
-                className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"
-              >
-                <Image
-                  src="/placeholder-user.jpg"
-                  alt="Profile"
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-              </button>
-              <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
-                <button
-                  className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors"
-                >
-                  <Link href={'/myprofile'}>
-                    My Profile
-                  </Link>
-                </button>
-                <button
-                  className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
-                  onClick={() => { handleLogout(); setIsMenuOpen(false); }}
-                >
-                  Logout
-                </button>
-              </div>
-            </div>}
+            
             <Link href={"/cart"} className="relative">
               <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-pink-600" />
               {state.items.length > 0 && (
@@ -226,7 +195,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
               {navigation.map((item) => (
                 <Link
@@ -246,20 +215,21 @@ export default function Header() {
                   )}
                 </Link>
               ))}
+             
 
+              {isAdmin && (
+                <Link
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                  }}
+                  href={"/admin/addproduct"}
+                  className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                >
+                  Add Product
+                </Link>
+              )}
               {userLoggedIn ? (
                 <>
-                  {isAdmin && (
-                    <Link
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                      }}
-                      href={"/admin/addproduct"}
-                      className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
-                    >
-                      Add Product
-                    </Link>
-                  )}
                   <Link
                     onClick={() => {
                       setIsMenuOpen(false);
@@ -269,7 +239,31 @@ export default function Header() {
                   >
                     Orders
                   </Link>
-
+                  <div className="relative group lg:hidden">
+                <button className="ml-3 flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all">
+                  <Image
+                    src="/placeholder-user.jpg"
+                    alt="Profile"
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover"
+                  />
+                </button>
+                <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
+                  <button className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors">
+                    <Link href={"/myprofile"}>My Profile</Link>
+                  </button>
+                  <button
+                    className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
                 </>
               ) : (
                 <Link

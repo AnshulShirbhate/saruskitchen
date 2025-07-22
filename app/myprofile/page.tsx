@@ -44,7 +44,7 @@ const ProfilePage = () => {
 
   if (!user) {
     return (
-      <div className="flex justify-center items-center h-screen text-gray-500 text-lg">
+      <div className="flex justify-center items-center h-screen text-gray-500 text-lg text-center px-4">
         User not logged in.
       </div>
     );
@@ -52,12 +52,12 @@ const ProfilePage = () => {
 
   return (
     <motion.div
-      className="max-w-2xl mx-auto mt-16 bg-gradient-to-br from-white to-pink-50 rounded-xl shadow-2xl p-8 transition-all duration-300"
+      className="max-w-2xl w-full mx-auto mt-16 bg-gradient-to-br from-white to-pink-50 rounded-xl shadow-2xl p-4 sm:p-6 md:p-8 transition-all duration-300"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="text-4xl font-extrabold text-gray-800 mb-8 text-center border-b pb-4">
+      <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-6 text-center border-b pb-4">
         My Profile
       </h2>
 
@@ -91,7 +91,7 @@ const ProfilePage = () => {
           )}
         </ProfileField>
 
-        <div className="pt-6 flex justify-end gap-4">
+        <div className="pt-4 sm:pt-6 flex flex-wrap justify-end gap-3 sm:gap-4">
           {editMode ? (
             <>
               <motion.button
@@ -147,11 +147,13 @@ const ProfileField = ({
   editMode?: boolean;
 }) => (
   <motion.div
-    className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+    className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden break-words"
     whileHover={{ scale: 1.02 }}
   >
-    <label className="text-sm font-medium text-gray-500">{label}</label>
-    <div className="mt-1 text-lg text-gray-800">{children || value}</div>
+    <label className="text-sm font-medium text-gray-500 block mb-1">{label}</label>
+    <div className="text-base sm:text-lg text-gray-800 break-words w-full max-w-full">
+      {children || value}
+    </div>
   </motion.div>
 );
 

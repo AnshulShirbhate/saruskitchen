@@ -138,7 +138,7 @@ const handleEditSubmit = async () => {
     <>
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <div className="relative h-48">
-          <Link href={'/products/'+product.pid}>
+          <Link href={'/allproducts/'+product.pid}>
           <Image
             src={product.image_url || "/placeholder.svg"}
             alt={product.name}

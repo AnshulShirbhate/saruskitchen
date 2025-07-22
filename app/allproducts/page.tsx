@@ -81,14 +81,14 @@ export default function ProductsPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-3 bg-blue-600 w-5/12 text-white md:hidden rounded-xl"
+            className="p-3 bg-blue-600 w-5/12 text-white lg:hidden rounded-xl"
           >
             {sidebarOpen ? "Close Filters" : "Apply Filters"}
           </button>
 
           {/* Sidebar */}
           <div
-            className={`lg:w-1/4 ${sidebarOpen ? "block" : "hidden"} md:block`}
+            className={`lg:w-1/4 ${sidebarOpen ? "block" : "hidden"} lg:block`}
           >
             <FilterSidebar onFilterChange={setFilters} />
           </div>
