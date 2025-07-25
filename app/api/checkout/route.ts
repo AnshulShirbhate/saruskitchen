@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
       throw new Error("User not found!");
     }
 
-    let message = `\nNew Cake Order From ${user.name}: ${user.phone} 🎂\n\n`;
+    let message = `\nNew Cake Order From ${user.name}: ${user.phone}, Email: ${user.email} 🎂\n\n`;
     let cartTotal = 0;
     for (let item of cartInfo) {
       message += `🧁 ${item.name} | ${item.weight} | Qty: ${item.quantity}\n₹${

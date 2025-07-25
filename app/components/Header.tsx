@@ -12,6 +12,7 @@ import { AppDispatch } from "@/redux/store";
 import { setAdmin } from "@/redux/adminSlice";
 import { Bounce, toast } from "react-toastify";
 import { setLoggedIn } from "@/redux/userSlice";
+import { Dropdown, DropdownItem } from "flowbite-react";
 
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -116,12 +117,45 @@ export default function Header() {
             ))}
 
             {isAdmin && (
-              <Link
-                href={"/admin/addproduct"}
-                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600 hover:scale-110`}
+              <Dropdown
+                className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                label="Admin Routes"
+                dismissOnClick={false}
               >
-                Add Product
-              </Link>
+                <DropdownItem>
+                  <Link
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                    }}
+                    href={"/admin/addproduct"}
+                    className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                  >
+                    Add Product
+                  </Link>
+                </DropdownItem>
+                <DropdownItem>
+                  <Link
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                    }}
+                    href={"/admin/manageusers"}
+                    className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                  >
+                    Manage Users
+                  </Link>
+                </DropdownItem>
+                <DropdownItem>
+                    <Link
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                      }}
+                      href={"/admin/allorders"}
+                      className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                    >
+                      All Orders
+                    </Link>
+                  </DropdownItem>
+              </Dropdown>
             )}
 
             {userLoggedIn ? (
@@ -167,7 +201,6 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-4">
-            
             <Link href={"/cart"} className="relative">
               <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-pink-600" />
               {state.items.length > 0 && (
@@ -201,10 +234,11 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 ${item.name === "Custom Cakes"
+                  className={`relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 ${
+                    item.name === "Custom Cakes"
                       ? "bg-gradient-to-r from-pink-500 via-pink-400 to-pink-600 text-white shadow-lg hover:scale-105"
                       : "text-gray-700 hover:text-pink-600"
-                    }`}
+                  }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name === "Custom Cakes" ? "🎂 Custom Cakes" : item.name}
@@ -215,18 +249,47 @@ export default function Header() {
                   )}
                 </Link>
               ))}
-             
 
               {isAdmin && (
-                <Link
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                  }}
-                  href={"/admin/addproduct"}
+                <Dropdown
                   className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                  label="Admin Routes"
+                  dismissOnClick={false}
                 >
-                  Add Product
-                </Link>
+                  <DropdownItem>
+                    <Link
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                      }}
+                      href={"/admin/addproduct"}
+                      className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                    >
+                      Add Product
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Link
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                      }}
+                      href={"/admin/manageusers"}
+                      className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                    >
+                      Manage Users
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Link
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                      }}
+                      href={"/admin/allorders"}
+                      className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                    >
+                      All Orders
+                    </Link>
+                  </DropdownItem>
+                </Dropdown>
               )}
               {userLoggedIn ? (
                 <>
@@ -240,30 +303,30 @@ export default function Header() {
                     Orders
                   </Link>
                   <div className="relative group lg:hidden">
-                <button className="ml-3 flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all">
-                  <Image
-                    src="/placeholder-user.jpg"
-                    alt="Profile"
-                    width={40}
-                    height={40}
-                    className="rounded-full object-cover"
-                  />
-                </button>
-                <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
-                  <button className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors">
-                    <Link href={"/myprofile"}>My Profile</Link>
-                  </button>
-                  <button
-                    className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
-                    onClick={() => {
-                      handleLogout();
-                      setIsMenuOpen(false);
-                    }}
-                  >
-                    Logout
-                  </button>
-                </div>
-              </div>
+                    <button className="ml-3 flex items-center justify-center w-10 h-10 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all">
+                      <Image
+                        src="/placeholder-user.jpg"
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        className="rounded-full object-cover"
+                      />
+                    </button>
+                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
+                      <button className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors">
+                        <Link href={"/myprofile"}>My Profile</Link>
+                      </button>
+                      <button
+                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"
+                        onClick={() => {
+                          handleLogout();
+                          setIsMenuOpen(false);
+                        }}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </div>
                 </>
               ) : (
                 <Link

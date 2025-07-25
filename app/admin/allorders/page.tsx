@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -16,7 +17,7 @@ interface Order {
   };
 }
 
-const Orders = () => {
+const AllOrders = () => {
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +25,7 @@ const Orders = () => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/orders");
+        const response = await fetch("/api/getallorders");
         if (!response.ok) throw new Error("Failed to fetch orders");
         const data = await response.json();
         setOrders(data.orders);
@@ -43,7 +44,7 @@ const Orders = () => {
       <Card className="max-w-5xl mx-auto w-full">
         <CardHeader>
           <CardTitle className="text-2xl md:text-3xl font-bold text-center md:text-left">
-            Orders
+            All Orders
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -86,4 +87,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default AllOrders;

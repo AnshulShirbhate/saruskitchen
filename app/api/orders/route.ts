@@ -13,9 +13,13 @@ export async function GET(req: NextRequest, res: NextResponse){
                 customer: {
                     select: {
                         name: true,
-                        phone: true
+                        phone: true,
+                        email: true
                     }
                 }
+            },
+            orderBy: {
+                order_date: 'desc'
             }
         });
         return NextResponse.json({message: "Data fetched successfully!", orders: orders}, {status: 200});
