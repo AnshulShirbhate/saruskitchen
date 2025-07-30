@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { checkIsLoggedIn, setLoggedIn } from "@/redux/userSlice";
-import { checkIsAdmin } from "@/redux/adminSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 
@@ -38,8 +36,9 @@ const SignupPage = () => {
         body: JSON.stringify(form),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
-        const data = await res.json();
         toast.success(data.message, {
           position: "bottom-center",
           autoClose: 2000,
@@ -53,11 +52,10 @@ const SignupPage = () => {
         });
         window.location.href="/";
       } else {
-        const err = await res.text();
-        toast.error(err || "❌ Signup failed");
+        toast.error(data.message);
       }
     } catch (err) {
-      toast.error("⚠️ Network error");
+      toast.error(err instanceof Error? err.message :"⚠️ Network error");
     } finally {
       setLoading(false);
     }

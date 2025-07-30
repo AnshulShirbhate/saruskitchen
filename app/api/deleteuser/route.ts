@@ -8,12 +8,11 @@ export async function DELETE(req: NextRequest){
             where: {
                 id: id
             }
-        })
+        });
         return NextResponse.json({message: "User with ID: "+id+" deleted successfully!"}, {status: 200});
     } catch (error) {
         console.log(error)
-        return NextResponse.json({message: "Failed to delete user!"}, {status: 500});
-        
+        return NextResponse.json({message: "Failed to delete user!"}, {status: 500});   
     }
 
 }

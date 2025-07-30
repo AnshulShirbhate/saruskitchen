@@ -33,7 +33,11 @@ export async function POST(req: NextRequest) {
       },
     });
     if(!user) {
-      throw new Error("User not found!");
+      const request = NextResponse.json({message: "Login and try again!"}, {status: 400});
+      request.cookies.delete('auth_token');
+      return request;
+    } else if (!user.isVerified) {
+      throw new Error('Verify email id first!');
     }
 
     let message = `\nNew Cake Order From ${user.name}: ${user.phone}, Email: ${user.email} 🎂\n\n`;

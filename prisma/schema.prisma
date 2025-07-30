@@ -21,6 +21,7 @@ model Users {
   password String
   role Role @default(USER)
   createdAt DateTime @default(now())
+  isVerified Boolean @default(false)
   orders Orders[]
 }
 
@@ -44,5 +45,5 @@ model Orders {
   total Int
   order_date DateTime @default(now())
 
-  customer Users @relation(fields: [customer_id], references: [id])
+  customer Users @relation(fields: [customer_id], references: [id], onDelete: Cascade)
 }
