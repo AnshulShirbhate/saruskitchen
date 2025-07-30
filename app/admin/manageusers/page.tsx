@@ -116,6 +116,7 @@ const ManageUsers = () => {
                 <th className="px-6 py-3 text-gray-600 font-medium">Name</th>
                 <th className="px-6 py-3 text-gray-600 font-medium">Email</th>
                 <th className="px-6 py-3 text-gray-600 font-medium">Phone</th>
+                <th className="px-6 py-3 text-gray-600 font-medium">Is Verified?</th>
                 <th className="px-6 py-3 text-gray-600 font-medium">Role</th>
                 <th className="px-6 py-3 text-gray-600 font-medium">Joining Date</th>
                 <th className="px-6 py-3 text-gray-600 font-medium">Actions</th>
@@ -127,6 +128,7 @@ const ManageUsers = () => {
                   <td className="px-6 py-4 text-gray-800">{user.name}</td>
                   <td className="px-6 py-4 text-gray-800">{user.email}</td>
                   <td className="px-6 py-4 text-gray-800">{user.phone}</td>
+                  <td className="px-6 py-4 text-gray-800">{user.isVerified ? "Yes" : "No"}</td>
                   <td className="px-6 py-4 text-gray-800 capitalize">{user.role}</td>
                   <td className="px-6 py-4 text-gray-800">{new Date(user.createdAt).toLocaleDateString()}</td>
                   <td className="px-6 py-4">
@@ -201,6 +203,18 @@ const ManageUsers = () => {
               >
                 <option value="USER">User</option>
                 <option value="ADMIN">Admin</option>
+              </select>
+              <select
+                value={selectedUser.isVerified ? 'true' : 'false'}
+                onChange={(e) =>
+                  setSelectedUser((prev) =>
+                    prev ? { ...prev, isVerified: e.target.value === 'true' } : null
+                  )
+                }
+                className="w-full border rounded px-3 py-2"
+              >
+                <option value="true">Verified</option>
+                <option value="false">Not Verified</option>
               </select>
             </div>
             <div className="flex justify-end gap-4 mt-4">

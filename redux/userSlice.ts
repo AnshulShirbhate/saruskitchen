@@ -16,6 +16,7 @@ interface UserInterface {
     email: string;
     phone: string;
     role: string;
+    isVerified: boolean
 }
 
 interface adminInitialStateInterface {

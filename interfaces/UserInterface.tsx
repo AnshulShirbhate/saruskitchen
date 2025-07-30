@@ -5,4 +5,5 @@ export default interface UserInterface {
     phone: string,
     role: string,
     createdAt: Date
+    isVerified: boolean
 }

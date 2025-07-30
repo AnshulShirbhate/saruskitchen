@@ -13,6 +13,7 @@ export async function PATCH(req: NextRequest){
                 email: body.email,
                 phone: body.phone,
                 role: body.role,    
+                isVerified: body.isVerified
             }
         })
         return NextResponse.json({message: "Updated User Successfully!"}, {status: 200});

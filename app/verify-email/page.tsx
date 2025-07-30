@@ -30,8 +30,9 @@ export default function VerifyEmail() {
             theme: "colored",
             transition: Bounce,
           });
-
-          window.location.href='/';
+          setTimeout(()=>{
+              window.location.href='/';
+          }, 2000)
         } else {
           throw new Error(data.message);
         }

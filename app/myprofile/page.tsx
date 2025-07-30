@@ -7,6 +7,7 @@ import { setUser } from '@/redux/userSlice';
 import { toast } from 'react-toastify';
 import { FiEdit2, FiSave, FiX } from 'react-icons/fi';
 import { motion } from 'framer-motion';
+import { SiTicktick } from "react-icons/si";
 
 const ProfilePage = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -42,6 +43,23 @@ const ProfilePage = () => {
     }
   };
 
+  const handleSendVerificationEmail = async (email: string) => {
+    try {
+      const res = await fetch('/api/sendverificationemail', {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (res.ok) {
+        toast.success('Verification email sent successfully');
+      } else {
+        const errorData = await res.json();
+        toast.error(errorData.message || 'Failed to send verification email');
+      }
+    } catch (err) {
+      toast.error('Something went wrong');
+    }
+  };
+
   if (!user) {
     return (
       <div className="flex justify-center items-center h-screen text-gray-500 text-lg text-center px-4">
@@ -63,7 +81,27 @@ const ProfilePage = () => {
 
       <div className="space-y-6">
         <ProfileField label="User ID" value={user.id} />
-        <ProfileField label="Email" value={user.email} />
+        
+        <ProfileField label="Email">
+          <div className="flex items-center justify-between">
+            <span>{user.email}</span>
+            {user.isVerified ? (
+              <span className="text-green-500 flex items-center gap-1">
+                <SiTicktick className="text-lg" />
+                Verified
+              </span>
+            ) : (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleSendVerificationEmail(user.email)}
+                className="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition-all text-sm sm:text-base"
+              >
+                Verify Email
+              </motion.button>
+            )}
+          </div>
+        </ProfileField>
 
         <ProfileField label="Name" editMode={editMode}>
           {editMode ? (
