@@ -22,14 +22,14 @@ const ProfilePage = () => {
     setLoading(true);
     try {
       const res = await fetch('/api/updateprofile', {
-        method: 'POST',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, phone }),
       });
 
       if (res.ok) {
         const updatedUser = await res.json();
-        dispatch(setUser(updatedUser));
+        dispatch(setUser(updatedUser.user));
         toast.success('Profile updated successfully');
         setEditMode(false);
       } else {
