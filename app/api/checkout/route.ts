@@ -1,16 +1,6 @@
 import {prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from "next/server";
-// import twilio from "twilio";
 import nodemailer from "nodemailer";
-
-
-// Initialize Twilio client with environment variables
-// const accountSid = process.env.TWILIO_ACCOUNT_SID!;
-// const authToken = process.env.TWILIO_AUTH_TOKEN!;
-// const fromPhone = process.env.TWILIO_PHONE_NUMBER!; // Twilio phone number
-// const toPhone = process.env.MY_PHONE_NUMBER!; // your phone number to receive SMS
-
-// const client = twilio(accountSid, authToken);
 
 // Nodemailer setup
 const transporter = nodemailer.createTransport({
@@ -60,18 +50,7 @@ export async function POST(req: NextRequest) {
       }
     })
 
-    // const result = await client.messages.create({
-    //   body: message,
-    //   from: fromPhone,
-    //   to: toPhone,
-    // });
 
-    // Send to Customer
-    // await client.messages.create({
-    //   body: `\n🎉 Thank you ${customerName} for your order! We’ve received your cake order worth ₹${cartTotal}. We'll contact you within 12 hours. ❤️`,
-    //   from: fromPhone,
-    //   to: "+91" + customerPhone,
-    // });
 
      await transporter.sendMail({
       from: process.env.GMAIL_EMAIL,
