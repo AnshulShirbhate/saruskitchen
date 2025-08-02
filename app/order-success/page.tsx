@@ -19,7 +19,7 @@ export default function OrderSuccessPage() {
           We take pride in crafting cakes with love, hygiene, and perfection. A confirmation message has been sent to your phone. 🎂✨
         </p>
 
-        <Link href="/products">
+        <Link href="/allproducts">
           <Button className="bg-pink-600 hover:bg-pink-700 text-white text-sm px-6 py-2 rounded-full transition duration-300">
             Browse More Products
           </Button>

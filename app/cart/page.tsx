@@ -105,7 +105,7 @@ export default function CartPage() {
           <p className="text-gray-600 mb-6">
             Add some delicious cakes to get started!
           </p>
-          <Link href="/products">
+          <Link href="/allproducts">
             <Button className="bg-pink-600 hover:bg-pink-700">
               Browse Products
             </Button>

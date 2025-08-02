@@ -1,10 +1,13 @@
-
 'use client';
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import LoadingComponent from "@/app/components/LoadingComponent";
 import { motion } from "framer-motion";
+import io from 'socket.io-client';
+import { toast, Toaster } from "react-hot-toast";
+
+const socket = io(process.env.NEXT_PUBLIC_SOCKET_SERVER);
 
 interface Order {
   oid: number;
@@ -21,26 +24,48 @@ const AllOrders = () => {
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/getallorders");
-        if (!response.ok) throw new Error("Failed to fetch orders");
-        const data = await response.json();
-        setOrders(data.orders);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchOrders = async () => {
 
+    try {
+      setLoading(true);
+      const response = await fetch("/api/getallorders");
+      if (!response.ok) throw new Error("Failed to fetch orders");
+      const data = await response.json();
+      setOrders(data.orders);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  useEffect(() => {
     fetchOrders();
   }, []);
 
+  useEffect(() => {
+
+    socket.on('newOrder', () => {
+      toast.success(`New order received!`,{
+        duration: 4000,
+        position: 'top-right',
+      });
+       
+      fetchOrders();
+    });
+
+    return () => {
+      socket.off('newOrder');
+    };
+
+  }, []);
+
+
+
   return (
     <div className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 md:px-10">
+      <Toaster/>
       <Card className="max-w-5xl mx-auto w-full">
         <CardHeader>
           <CardTitle className="text-2xl md:text-3xl font-bold text-center md:text-left">
