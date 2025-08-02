@@ -1,7 +1,7 @@
 
 import type React from "react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins, Merriweather, Playfair_Display, Dancing_Script, Quicksand } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "./context/CartContext";
 import Header from "./components/Header";
@@ -13,11 +13,19 @@ import ProductsInitializer from "./components/ProductsInitializer";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const quicksand = Quicksand({
+  subsets: ['latin'],
+  weight: ['700'],
+  variable: '--font-quicksand',
+  display: 'swap',
+});
+
+
+
 export const metadata: Metadata = {
   title: process.env.NEXT_PUBLIC_APP_NAME + " - Premium Homemade Cakes",
   description:
-    "Discover our hygienic, quality homemade cakes with customizable options. Fresh, healthy, and delicious cakes made with love.",
-  generator: "v0.dev",
+    `Discover our hygienic, quality homemade cakes with customizable options. Fresh, healthy, and delicious cakes made with love. Saru's Kitchen is a home bakery start up by Sarika Shirbhate and this website is made by her son Anshul Shirbhate.`,
   icons: {
     icon: "/images/favicon.png",
   },
@@ -30,7 +38,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={quicksand.className}>
         <ReduxProvider>
           <ProductsInitializer>
             <CartProvider>
