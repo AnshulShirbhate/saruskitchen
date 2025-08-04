@@ -1,26 +1,33 @@
-
-
 Application Prerequisites:
 
 Inside .env file add these values
 
-NEXT_PUBLIC_APP_NAME=<Name of App>
-DB_URI=<NeonDB URL>
-JWT_SECRET=<JWT Secret Key>
-CLOUDINARY_CLOUD_NAME=<Cloudinary Cloud Name>
-CLOUDINARY_API_KEY=<API KEY>
-CLOUDINARY_API_SECRET=<API SECRET>
+NEXT_PUBLIC_APP_NAME=
+DATABASE_URL=
 
-NODE_ENV=<development/production>
+// JWT Configurations
+JWT_SECRET=
+EMAIL_JWT_SECRET=
 
-ADMIN_USERNAME=<Admin Username>
-ADMIN_PASSWORD=<Admin Password>
+// Cloudinary Configurations
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 
+NODE_ENV=development
 
-TWILIO_ACCOUNT_SID=<Twilio SID>
-TWILIO_AUTH_TOKEN=<AUTH Token>
-TWILIO_PHONE_NUMBER=<Twilio Bough Phone Number>
-MY_PHONE_NUMBER=<Admin's Phone Number>
+// Gmail Configurations
+GMAIL_PASSWORD=
+GMAIL_EMAIL=
+
+// Frontend URL configurations
+FRONTEND_URL=
+
+// Redis URL
+REDIS_URL=URL
+
+// Socket or Worker Server
+NEXT_PUBLIC_SOCKET_SERVER=
 
 
 Now to run the app type these commands in your command line in the App's dorectory:
