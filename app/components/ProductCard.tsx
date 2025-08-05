@@ -199,7 +199,7 @@ const handleEditSubmit = async () => {
           </div>
 
           {isAdmin && (
-            <div className="mt-2 flex items-center justify-between">
+            <div className="mt-2 flex items-center space-x-2 justify-between">
               <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => setShowEditModal(true)}>
                 Edit Product
               </Button>

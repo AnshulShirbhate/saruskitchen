@@ -17,8 +17,8 @@ export interface FilterState {
   priceRange: [number, number]
 }
 
-const categories = ["cakes", "pastries", "desserts", "cupcakes"]
-const flavors = ["Chocolate", "Vanilla", "Strawberry", "Red Velvet", "Black Forest", "Butterscotch"]
+const categories = ["cakes", "pastries", "desserts", "cupcakes", "custom-cakes"]
+const flavors = ["chocolate", "vanilla", "strawberry", "red-velvet", "black-forest", "butterscotch", "pineapple", "mango"]
 const dietaryTypes = ["Veg", "Non-Veg"]
 
 export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
@@ -26,7 +26,7 @@ export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
     categories: [],
     flavors: [],
     dietaryType: [],
-    priceRange: [0, 5000],
+    priceRange: [0, 10000],
   })
 
   const handleCategoryChange = (category: string, checked: boolean) => {

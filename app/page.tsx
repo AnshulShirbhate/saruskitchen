@@ -6,7 +6,7 @@ import Carousel from "./components/Carousel"
 import FeaturesSection from "./components/FeaturesSection"
 import ProductCard from "./components/ProductCard"
 import { Button } from "@/components/ui/button"
-import {useDispatch, useSelector} from 'react-redux';
+import { useSelector} from 'react-redux';
 import { RootState } from "@/redux/store"
 import LoadingComponent from "./components/LoadingComponent"
 
@@ -17,7 +17,7 @@ export default function Home() {
     const loading = useSelector((state: RootState) =>{
       return state.products.loading;
     })
-  const topProducts = products && products.slice(0, 3)
+  const topProducts = products && products.filter((product) => product.category === "custom-cakes").slice(0,)
 
   return (
     <div className="min-h-screen">

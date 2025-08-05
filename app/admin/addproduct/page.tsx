@@ -174,7 +174,7 @@ const AddProductForm = () => {
           className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
         />
 
-        <input
+        {/* <input
           type="text"
           name="flavor"
           value={formData.flavor}
@@ -182,7 +182,23 @@ const AddProductForm = () => {
           placeholder="Flavor"
           required
           className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
-        />
+        /> */}
+        <select
+          name="flavor"
+          value={formData.flavor}
+          onChange={handleChange}
+          required
+          className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
+        >
+          <option value="">Select Flavour</option>
+          <option value="chocolate">Chocolate</option>
+          <option value="vanilla">Vanilla</option>
+          <option value="pineapple">Pineapple</option>
+          <option value="red-velvet">Red Velvet</option>
+          <option value="strawberry">Strawberry</option>
+          <option value="butterscotch">Butterscotch</option>
+          <option value="mango">Mango</option>
+        </select>
 
         <select
           name="category"
@@ -196,6 +212,7 @@ const AddProductForm = () => {
           <option value="pastries">Pastries</option>
           <option value="cupcakes">Cupcakes</option>
           <option value="desserts">Desserts</option>
+          <option value="custom-cakes">Custom Cakes</option>
         </select>
 
         <select
