@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { checkIsLoggedIn, setLoggedIn } from "@/redux/userSlice";
 import { checkIsAdmin, setAdmin } from "@/redux/adminSlice";
+import Link from "next/link";
 
 
 const LoginPage = () => {
@@ -166,13 +167,14 @@ const LoginPage = () => {
             )}
           </div>
           <div className="flex justify-between items-center text-sm">
-            <button
+            <Link
               type="button"
               className="text-pink-500 hover:underline focus:outline-none"
-              onClick={() => toast.info('Password recovery is not implemented yet.')}
+              // onClick={() => toast.info('Password recovery is not implemented yet.')}
+              href="/forgot-password"
             >
               Forgot Password?
-            </button>
+            </Link>
             <span className="text-gray-400">|</span>
             <button
               type="button"

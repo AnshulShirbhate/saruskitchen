@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1d" });
 
   // Sending email verification link to the user.
-  await verification(newUser.id, newUser.email, newUser.name);
+  await verification(newUser.id, newUser.email, newUser.name, 'verification');
 
 
   (await cookies()).set("auth_token", token, {

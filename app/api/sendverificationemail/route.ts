@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
             throw new Error('User already verified!');
         }
         
-        await verification(user.id, user.email, user?.name);
+        await verification(user.id, user.email, user?.name, "verification");
         
         return NextResponse.json({message: "Email verification link sent!"});
     } catch (error) {
