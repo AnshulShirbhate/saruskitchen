@@ -4,14 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
 
 
 
 const SignupPage = () => {
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -19,13 +16,65 @@ const SignupPage = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
+    
+    // Clear error when user starts typing
+    if (errors[name as keyof typeof errors]) {
+      setErrors({ ...errors, [name]: "" });
+    }
   };
 
+  const validateForm = () => {
+    const newErrors = {
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+    };
+
+    // Name validation
+    if (form.name.trim().length < 2) {
+      newErrors.name = "Name should be at least 2 characters long";
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Phone validation
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(form.phone)) {
+      newErrors.phone = "Phone number should be exactly 10 digits";
+    }
+
+    // Password validation
+    if (form.password.length < 6) {
+      newErrors.password = "Password should be at least 6 characters long";
+    }
+
+    setErrors(newErrors);
+    return Object.values(newErrors).every(error => error === "");
+  };
+
+
+
   const handleSignup = async () => {
+    if (!validateForm()) {
+      toast.error("Please fix the errors before submitting");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch("/api/signup", {
@@ -50,7 +99,9 @@ const SignupPage = () => {
           theme: "colored",
           transition: Bounce,
         });
-        window.location.href="/";
+        setTimeout(() => {
+          window.location.href="/";
+        }, 3000);
       } else {
         toast.error(data.message);
       }
@@ -74,42 +125,81 @@ const SignupPage = () => {
         </h2>
         <p className="text-center text-gray-500 mb-8">Sign up to get started</p>
         <div className="space-y-6">
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={form.name}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 bg-gray-50 text-gray-700"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 bg-gray-50 text-gray-700"
-            required
-          />
-          <input
-            type="tel"
-            name="phone"
-            placeholder="Phone Number"
-            value={form.phone}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 bg-gray-50 text-gray-700"
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 bg-gray-50 text-gray-700"
-            required
-          />
+          <div>
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              value={form.name}
+              onChange={handleChange}
+              className={`w-full p-3 border rounded-xl focus:outline-none focus:ring-2 bg-gray-50 text-gray-700 ${
+                errors.name 
+                  ? "border-red-500 focus:ring-red-400" 
+                  : "border-gray-200 focus:ring-pink-400"
+              }`}
+              required
+            />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+            )}
+          </div>
+          
+          <div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              className={`w-full p-3 border rounded-xl focus:outline-none focus:ring-2 bg-gray-50 text-gray-700 ${
+                errors.email 
+                  ? "border-red-500 focus:ring-red-400" 
+                  : "border-gray-200 focus:ring-pink-400"
+              }`}
+              required
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
+          </div>
+          
+          <div>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Phone Number"
+              value={form.phone}
+              onChange={handleChange}
+              className={`w-full p-3 border rounded-xl focus:outline-none focus:ring-2 bg-gray-50 text-gray-700 ${
+                errors.phone 
+                  ? "border-red-500 focus:ring-red-400" 
+                  : "border-gray-200 focus:ring-pink-400"
+              }`}
+              required
+            />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+            )}
+          </div>
+          
+          <div>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              className={`w-full p-3 border rounded-xl focus:outline-none focus:ring-2 bg-gray-50 text-gray-700 ${
+                errors.password 
+                  ? "border-red-500 focus:ring-red-400" 
+                  : "border-gray-200 focus:ring-pink-400"
+              }`}
+              required
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
+          </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-500">Already have an account?</span>
             <button

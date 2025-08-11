@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-// import twilio from "twilio";
 import cloudinary from "@/lib/cloudinary";
 import nodemailer from "nodemailer";
 import { prisma } from "@/lib/prisma";
 
-// const accountSid = process.env.TWILIO_ACCOUNT_SID!;
-// const authToken = process.env.TWILIO_AUTH_TOKEN!;
-// const fromPhone = process.env.TWILIO_PHONE_NUMBER!;
-// const toPhone = process.env.MY_PHONE_NUMBER!; // your phone number to receive SMS
-
-// const client = twilio(accountSid, authToken);
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -37,6 +30,13 @@ export async function POST(req: NextRequest) {
       throw new Error("User not found!");
     }
 
+
+    if (!user.isVerified) {
+      return NextResponse.json({
+        message: "Please verify your email Id to place a custom order."
+      }, { status: 403 });
+    }
+
     const arrayBuffer = await image.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const uploadResult = await new Promise<any>((resolve, reject) => {
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     });
     let message = `🎂 New Custom Cake Order 🎂\n👤 Name: ${user.name}\n📞 Phone: ${user.phone}\n📧 Email: ${user.email}\n📝 Instructions: ${instruction} 🖼️ Image: ${uploadResult.secure_url}`;
 
-    // Message for admin
+
     await transporter.sendMail({
       from: process.env.GMAIL_EMAIL,
       to: process.env.GMAIL_EMAIL,
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     });
 
     let usermessage = `🎉 Thank you, ${user.name}!\nWe've received your custom cake order request 🎂\n📋 Our team will review your instructions and get in touch with you within 12 hours.\n❤️ We appreciate your trust in Saru's Kitchen!\n– Saru’s Kitchen Team`;
-    // Message for user
+
     await transporter.sendMail({
       from: process.env.GMAIL_EMAIL,
       to: user.email,
@@ -73,11 +73,7 @@ export async function POST(req: NextRequest) {
       text: usermessage,
     });
 
-    // const result = await client.messages.create({
-    //   body: message,
-    //   from: fromPhone,
-    //   to: toPhone,
-    // });
+
 
     return NextResponse.json(
       { message: "Request Submitted Successfully!" },

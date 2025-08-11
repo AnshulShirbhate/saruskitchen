@@ -18,10 +18,52 @@ const LoginPage = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+
+  const sanitizeInput = (input: string, type: 'email' | 'password') => {
+    if (type === 'email') {
+      // Remove extra spaces and convert to lowercase for email
+      return input.trim().toLowerCase();
+    } else if (type === 'password') {
+      // Remove leading/trailing spaces but preserve internal spaces for password
+      return input.trim();
+    }
+    return input;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCredentials({ ...credentials, [name]: value });
+    const sanitizedValue = sanitizeInput(value, name as 'email' | 'password');
+    setCredentials({ ...credentials, [name]: sanitizedValue });
+    
+    // Clear error when user starts typing
+    if (errors[name as keyof typeof errors]) {
+      setErrors({ ...errors, [name]: "" });
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      email: "",
+      password: "",
+    };
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(credentials.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Password validation
+    if (credentials.password.length < 6) {
+      newErrors.password = "Password should be at least 6 characters long";
+    }
+
+    setErrors(newErrors);
+    return Object.values(newErrors).every(error => error === "");
   };
 
   useEffect(() => {
@@ -30,6 +72,11 @@ const LoginPage = () => {
   }, []);
 
   const handleLogin = async () => {
+    if (!validateForm()) {
+      toast.error("Please fix the errors before submitting");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch("/api/login", {
@@ -81,24 +128,43 @@ const LoginPage = () => {
         </h2>
         <p className="text-center text-gray-500 mb-8">Sign in to your account</p>
         <div className="space-y-6">
-          <input
-            type="text"
-            name="email"
-            placeholder="Email"
-            value={credentials.email}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 bg-gray-50 text-gray-700"
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={credentials.password}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 bg-gray-50 text-gray-700"
-            required
-          />
+          <div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={credentials.email}
+              onChange={handleChange}
+              className={`w-full p-3 border rounded-xl focus:outline-none focus:ring-2 bg-gray-50 text-gray-700 ${
+                errors.email 
+                  ? "border-red-500 focus:ring-red-400" 
+                  : "border-gray-200 focus:ring-pink-400"
+              }`}
+              required
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
+          </div>
+          
+          <div>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={credentials.password}
+              onChange={handleChange}
+              className={`w-full p-3 border rounded-xl focus:outline-none focus:ring-2 bg-gray-50 text-gray-700 ${
+                errors.password 
+                  ? "border-red-500 focus:ring-red-400" 
+                  : "border-gray-200 focus:ring-pink-400"
+              }`}
+              required
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
+          </div>
           <div className="flex justify-between items-center text-sm">
             <button
               type="button"

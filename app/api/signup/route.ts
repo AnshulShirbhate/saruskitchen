@@ -11,8 +11,16 @@ const SECRET_KEY = process.env.JWT_SECRET!;
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const { name, email, phone, password } = body;
+  if(name.length <= 1) {
+    return NextResponse.json({ message: "Name must be at least 2 characters long" }, { status: 400 });
+  } else if (email.length <= 5 || !email.includes("@")) {
+    return NextResponse.json({ message: "Invalid email address" }, { status: 400 });
+  } else if (phone.length != 10) {
+    return NextResponse.json({ message: "Phone number must be exactly 10 digits long" }, { status: 400 });
+  } else if (password.length < 6) {
+    return NextResponse.json({ message: "Password must be at least 6 characters long" }, { status: 400 });
+  }
 
-  
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await prisma.users.findUnique({
@@ -52,5 +60,5 @@ export async function POST(req: NextRequest) {
     maxAge: 60 * 60 * 24,
   });
 
-  return NextResponse.json({ message: "Registration Successfull!" }, { status: 200 });
+  return NextResponse.json({ message: "Verification email sent !" }, { status: 200 });
 }

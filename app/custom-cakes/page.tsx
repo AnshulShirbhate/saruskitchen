@@ -18,6 +18,7 @@ export default function CustomCakesPage() {
     image: null as File | null,
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -30,6 +31,7 @@ export default function CustomCakesPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setFormData((prev) => ({ ...prev, image: file }));
+    setImagePreview(file ? URL.createObjectURL(file) : null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,6 +65,7 @@ export default function CustomCakesPage() {
           instructions: "",
           image: null as File | null,
         });
+        setImagePreview(null);
       } else {
         throw new Error(data.message);
       }
@@ -175,6 +178,13 @@ export default function CustomCakesPage() {
                         <p className="text-sm text-green-600">
                           Selected: {formData.image.name}
                         </p>
+                      )}
+                      {imagePreview && (
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="mt-3 h-32 object-cover rounded shadow"
+                      />
                       )}
                     </div>
                   </div>
