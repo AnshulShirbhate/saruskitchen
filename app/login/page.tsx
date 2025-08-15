@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { checkIsLoggedIn, setLoggedIn } from "@/redux/userSlice";
-import { checkIsAdmin, setAdmin } from "@/redux/adminSlice";
 import Link from "next/link";
 
 
@@ -69,7 +68,6 @@ const LoginPage = () => {
 
   useEffect(() => {
     dispatch(setLoggedIn(false));
-    dispatch(setAdmin(false));
   }, []);
 
   const handleLogin = async () => {
@@ -90,7 +88,6 @@ const LoginPage = () => {
 
       if (res.ok) {
         dispatch(checkIsLoggedIn());
-        dispatch(checkIsAdmin());
         toast.success("Welcome! You are now logged in.", {
           position: "bottom-center",
           autoClose: 2000,

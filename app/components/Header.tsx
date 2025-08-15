@@ -9,15 +9,13 @@ import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import { AppDispatch } from "@/redux/store";
-import { setAdmin } from "@/redux/adminSlice";
 import { Bounce, toast } from "react-toastify";
 import { setLoggedIn } from "@/redux/userSlice";
 import { Dropdown, DropdownItem } from "flowbite-react";
 
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
-  const isAdmin = useSelector((state: RootState) => state.admin.isAdmin);
-  const userLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+  const userLoggedIn = useSelector((state: RootState) => state.user.user);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { state } = useCart();
@@ -35,7 +33,6 @@ export default function Header() {
       const data = await res.json();
 
       if (res.ok) {
-        dispatch(setAdmin(false));
         dispatch(setLoggedIn(false));
         toast.success("Successfully Logged Out!", {
           position: "bottom-center",
@@ -116,7 +113,7 @@ export default function Header() {
               </Link>
             ))}
 
-            {isAdmin && (
+            {userLoggedIn?.role === "ADMIN" && (
               <Dropdown
                 className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
                 label="Admin Routes"
@@ -145,16 +142,16 @@ export default function Header() {
                   </Link>
                 </DropdownItem>
                 <DropdownItem>
-                    <Link
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                      }}
-                      href={"/admin/allorders"}
-                      className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
-                    >
-                      All Orders
-                    </Link>
-                  </DropdownItem>
+                  <Link
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                    }}
+                    href={"/admin/allorders"}
+                    className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
+                  >
+                    All Orders
+                  </Link>
+                </DropdownItem>
               </Dropdown>
             )}
 
@@ -250,7 +247,7 @@ export default function Header() {
                 </Link>
               ))}
 
-              {isAdmin && (
+              {userLoggedIn?.role === "ADMIN" && (
                 <Dropdown
                   className="relative block px-4 py-2 text-base font-medium rounded-md transition-all duration-300 text-gray-700 hover:text-pink-600"
                   label="Admin Routes"
@@ -313,8 +310,13 @@ export default function Header() {
                       />
                     </button>
                     <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-pink-100 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-50">
-                      <button className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors">
-                        <Link href={"/myprofile"}>My Profile</Link>
+                      <button
+                        
+                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-t-xl transition-colors"
+                      >
+                        <Link onClick={() => {
+                          setIsMenuOpen(false);
+                        }} href={"/myprofile"}>My Profile</Link>
                       </button>
                       <button
                         className="w-full text-left px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-b-xl transition-colors"

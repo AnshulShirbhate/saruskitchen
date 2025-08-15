@@ -8,9 +8,6 @@ import { useSelector } from "react-redux";
 import LoadingComponent from "../components/LoadingComponent";
 
 export default function ProductsPage() {
-  const isAdmin = useSelector((state: RootState) => {
-    return state.admin.isAdmin;
-  });
   const [filters, setFilters] = useState<FilterState>({
     categories: [],
     flavors: [],

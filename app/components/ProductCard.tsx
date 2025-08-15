@@ -21,7 +21,7 @@ const weightOptions = ["500gm", "1kg", "2kg", "3kg"] as const;
 export default function ProductCard({ product }: ProductCardProps) {
   const dispatchRedux = useDispatch<AppDispatch>();
   const { dispatch } = useCart();
-  const isAdmin = useSelector((state: RootState) => state.admin.isAdmin);
+  const userLoggedIn = useSelector((state: RootState) => state.user.user);
   const [selectedWeight, setSelectedWeight] =
     useState<keyof typeof product.weights>("500gm");
 
@@ -198,7 +198,7 @@ const handleEditSubmit = async () => {
             </Button>
           </div>
 
-          {isAdmin && (
+          {userLoggedIn?.role==="ADMIN" && (
             <div className="mt-2 flex items-center space-x-2 justify-between">
               <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => setShowEditModal(true)}>
                 Edit Product
