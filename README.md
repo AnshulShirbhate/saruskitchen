@@ -1,11 +1,10 @@
 Application Prerequisites:<br />
-
 Inside .env file add these values<br /><br />
 
 // App Configurations<br />
 NEXT_PUBLIC_APP_NAME=<br /><br />
 
-//Database Configurations
+//Database Configurations<br />
 DATABASE_URL=<br /><br />
 
 // JWT Configurations<br />

@@ -31,6 +31,7 @@ export const metadata: Metadata = {
   },
 };
 
+
 export default function RootLayout({
   children,
 }: {
@@ -38,6 +39,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="google-site-verification" content="F6RYRH5HC0uYEpqHoZfFyVKvFtNbJ1ISrfiRT2kLqS8" />
+      </head>
       <body className={quicksand.className}>
         <ReduxProvider>
           <ProductsInitializer>
