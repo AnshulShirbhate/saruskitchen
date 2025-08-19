@@ -18,7 +18,7 @@ export async function PATCH(req: NextRequest){
             data: { password: bcrypt.hashSync(newPassword, 10) }
         });
     } catch (error) {
-        return new Response(JSON.stringify({ message: "Invalid token" }), { status: 401 });
+        return new Response(JSON.stringify({ message: "Reset Token Expired!" }), { status: 401 });
     }
 
     return new Response(JSON.stringify({ message: "Password reset successfully!" }), { status: 200 });

@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     })
 
 
-
+    // Sending email to the admin
      await transporter.sendMail({
       from: process.env.GMAIL_EMAIL,
       to: process.env.GMAIL_EMAIL,

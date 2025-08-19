@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Button as UIButton } from "@/components/ui/button";
 import Image from "next/image";
 import { useCart } from "../context/CartContext";
 import { Button } from "@/components/ui/button";
@@ -20,6 +22,7 @@ export default function CartPage() {
   })
   const { state, dispatch } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
 
@@ -74,6 +77,7 @@ export default function CartPage() {
       });
     } finally {
       setIsCheckingOut(false);
+      setShowCheckoutModal(false);
     }
   };
 
@@ -116,185 +120,197 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Cart Items ({state.items.length})</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {state.items.map((item) => (
-                    <div
-                      key={
-                        item.pid +
-                        Math.random() * new Date().getUTCMilliseconds()
-                      }
-                      className="flex items-center space-x-4 p-4 border rounded-lg"
-                    >
-                      <div className="w-20 h-20 relative ">
-                        <Image
-                          src={item.image_url || "/placeholder.svg"}
-                          alt={item.name}
-                          fill
-                          className="object-cover rounded"
-                        />
+    <>
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Cart Items */}
+            <div className="lg:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Cart Items ({state.items.length})</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {state.items.map((item) => (
+                      <div
+                        key={
+                          item.pid +
+                          Math.random() * new Date().getUTCMilliseconds()
+                        }
+                        className="flex items-center space-x-4 p-4 border rounded-lg"
+                      >
+                        <div className="w-20 h-20 relative ">
+                          <Image
+                            src={item.image_url || "/placeholder.svg"}
+                            alt={item.name}
+                            fill
+                            className="object-cover rounded"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900">
+                            {item.name}
+                          </h3>
+                          <p className="text-sm text-gray-600">{item.category}</p>
+                          <p className="text-sm text-gray-600">{item.weight}</p>
+                          <p className="text-lg font-bold text-pink-600">
+                            ₹{item.price}
+                          </p>
+                        </div>
+                        <div className="flex flex-col space-y-1 md:space-y-0 md:flex-row items-center space-x-2 ">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() =>
+                              updateQuantity(item.pid, item.quantity - 1)
+                            }
+                            disabled={item.quantity <= 1}
+                          >
+                            <Minus className="h-2 w-2 md:h-4 md:w-4" />
+                          </Button>
+                          <Input
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) =>
+                              updateQuantity(
+                                item.pid,
+                                Number.parseInt(e.target.value) || 1
+                              )
+                            }
+                            className="w-10 md:w-16 text-center"
+                            min="1"
+                          />
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() =>
+                              updateQuantity(item.pid, item.quantity + 1)
+                            }
+                          >
+                            <Plus className="h-2 w-2 md:h-4 md:w-4" />
+                          </Button>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">
+                            ₹{item.price * item.quantity}
+                          </p>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeItem(item.pid)}
+                            className="text-red-600 hover:text-red-700 mt-1"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
-
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900">
-                          {item.name}
-                        </h3>
-                        <p className="text-sm text-gray-600">{item.category}</p>
-                        <p className="text-sm text-gray-600">{item.weight}</p>
-                        <p className="text-lg font-bold text-pink-600">
-                          ₹{item.price}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-col space-y-1 md:space-y-0 md:flex-row items-center space-x-2 ">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() =>
-                            updateQuantity(item.pid, item.quantity - 1)
-                          }
-                          disabled={item.quantity <= 1}
-                        >
-                          <Minus className="h-2 w-2 md:h-4 md:w-4" />
-                        </Button>
-                        <Input
-                          type="number"
-                          value={item.quantity}
-                          onChange={(e) =>
-                            updateQuantity(
-                              item.pid,
-                              Number.parseInt(e.target.value) || 1
-                            )
-                          }
-                          className="w-10 md:w-16 text-center"
-                          min="1"
-                        />
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() =>
-                            updateQuantity(item.pid, item.quantity + 1)
-                          }
-                        >
-                          <Plus className="h-2 w-2 md:h-4 md:w-4" />
-                        </Button>
-                      </div>
-
-                      <div className="text-right">
-                        <p className="font-semibold">
-                          ₹{item.price * item.quantity}
-                        </p>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeItem(item.pid)}
-                          className="text-red-600 hover:text-red-700 mt-1"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Order Summary */}
-          <div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Coupon Input */}
-                <div className="flex items-center space-x-2">
-                  <Input
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    placeholder="Enter Coupon Code"
-                    className="flex-1"
-                    disabled={discountPercent > 0}
-                  />
-                  {discountPercent > 0 ? (
-                    <Button
-                      variant="destructive"
-                      onClick={() => {
-                        setCouponCode("");
-                        setDiscountPercent(0);
-                        toast.info("Coupon removed", {
-                          position: "bottom-center",
-                        });
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={handleApplyCoupon}
-                      className="bg-pink-500 hover:bg-pink-600"
-                    >
-                      Apply
-                    </Button>
-                  )}
-                </div>
-
-                <div className="flex justify-between">
-                  <span>Subtotal:</span>
-                  <span>₹{state.total}</span>
-                </div>
-                {discountPercent > 0 && (
-                  <div className="flex justify-between text-green-600 font-semibold">
-                    <span>Discount ({discountPercent}%):</span>
-                    <span>- ₹{discountAmount}</span>
+                    ))}
                   </div>
-                )}
-                {/* <div className="flex justify-between">
-                  <span>Delivery:</span>
-                  <span>₹50</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Tax (5%):</span>
-                  <span>₹{Math.round(state.total * 0.05)}</span>
-                </div> */}
-                <hr />
-                <div className="flex justify-between text-lg font-bold">
-                  <span>Total:</span>
-                  <span>₹{finalTotal}</span>
-                </div>
-
-
-                <Button
-                  onClick={handleCheckout}
-                  disabled={
-                    isCheckingOut 
-                  }
-                  className="w-full bg-pink-600 hover:bg-pink-700"
-                >
-                  {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
-                </Button>
-
-                <div className="text-sm text-gray-600 space-y-1">
-                  <p>• Free candles on orders above ₹1000</p>
-                  <p>• Promise of freshness and the highest hygiene</p>
-                  <p>• 100% satisfaction guaranteed</p>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
+            {/* Order Summary */}
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Order Summary</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Coupon Input */}
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="Enter Coupon Code"
+                      className="flex-1"
+                      disabled={discountPercent > 0}
+                    />
+                    {discountPercent > 0 ? (
+                      <Button
+                        variant="destructive"
+                        onClick={() => {
+                          setCouponCode("");
+                          setDiscountPercent(0);
+                          toast.info("Coupon removed", {
+                            position: "bottom-center",
+                          });
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={handleApplyCoupon}
+                        className="bg-pink-500 hover:bg-pink-600"
+                      >
+                        Apply
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span>₹{state.total}</span>
+                  </div>
+                  {discountPercent > 0 && (
+                    <div className="flex justify-between text-green-600 font-semibold">
+                      <span>Discount ({discountPercent}%):</span>
+                      <span>- ₹{discountAmount}</span>
+                    </div>
+                  )}
+                  <hr />
+                  <div className="flex justify-between text-lg font-bold">
+                    <span>Total:</span>
+                    <span>₹{finalTotal}</span>
+                  </div>
+                  <Button
+                    onClick={() => setShowCheckoutModal(true)}
+                    disabled={isCheckingOut}
+                    className="w-full bg-pink-600 hover:bg-pink-700"
+                  >
+                    {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
+                  </Button>
+                  <div className="text-sm text-gray-600 space-y-1">
+                    <p>• Free candles on orders above ₹1000</p>
+                    <p>• Promise of freshness and the highest hygiene</p>
+                    <p>• 100% satisfaction guaranteed</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      {/* Checkout Modal */}
+      <Dialog open={showCheckoutModal} onOpenChange={(open) => setShowCheckoutModal(open)}>
+        <DialogContent className="max-w-md w-10/12 p-6">
+          <DialogTitle asChild>
+            <h2 className="text-xl font-bold mb-4">Please Note</h2>
+          </DialogTitle>
+          <ul className="mb-6 list-disc pl-5 text-gray-700 space-y-2">
+            <li>The shop is for Customers living in <span className="text-2xl font-bold">Amravati, Maharashtra</span> only.</li>
+            <li>This is a take away shop. <br /><span className='text-red-500 text-lg'>We do not provide any delivery service.</span> Customer should take responsibility of taking away their order.</li>
+            <li>Address will be sent to you via email or phone call after the order is confirmed.</li>
+          </ul>
+          <div className="flex justify-end space-x-3">
+            <UIButton
+              variant="outline"
+              onClick={() => setShowCheckoutModal(false)}
+              className="px-4 py-2"
+            >
+              Cancel
+            </UIButton>
+            <UIButton
+              onClick={handleCheckout}
+              className="bg-pink-600 hover:bg-pink-700 px-4 py-2 text-white"
+              disabled={isCheckingOut}
+            >
+              {isCheckingOut ? "Processing..." : "Confirm Order"}
+            </UIButton>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
