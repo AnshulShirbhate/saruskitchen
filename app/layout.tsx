@@ -2,6 +2,7 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { Inter, Poppins, Merriweather, Playfair_Display, Dancing_Script, Quicksand } from "next/font/google";
+// @ts-ignore
 import "./globals.css";
 import { CartProvider } from "./context/CartContext";
 import Header from "./components/Header";
@@ -25,9 +26,17 @@ export const quicksand = Quicksand({
 export const metadata: Metadata = {
   title: process.env.NEXT_PUBLIC_APP_NAME + " - Premium Homemade Cakes",
   description:
-    `Discover our hygienic, quality homemade cakes with customizable options. Fresh, healthy, and delicious cakes made with love. Saru's Kitchen is a home bakery start up by Sarika Shirbhate and this website is made by her son Anshul Shirbhate.`,
+    `Discover our hygienic, quality homemade cakes with customizable options. Fresh, healthy, and delicious cakes made with love. Saru's Kitchen is a home bakery start up by Sarika Shirbhate with authenticity and unique flavours and designs in mind.`,
+  applicationName: "Saru's Kitchen",
+  other: {
+    "site_name": "Saru's Kitchen",
+  }, 
   icons: {
-    icon: "/images/favicon.png",
+    icon: "/images/favicon.ico",
+  },
+  openGraph: {
+    siteName: "Saru's Kitchen",
+    title: "Saru's Kitchen",
   },
 };
 
